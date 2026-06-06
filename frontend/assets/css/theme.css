@@ -1,0 +1,165 @@
+/* ============================================
+   VENDORBRIDGE - THEME VARIABLES
+   Dark & Light Mode CSS Custom Properties
+   ============================================ */
+
+/* ---- DARK THEME (default) ---- */
+[data-theme="dark"],
+:root {
+    /* Backgrounds */
+    --bg-primary: #0b0f1a;
+    --bg-secondary: #111827;
+    --bg-tertiary: #1a2235;
+    --bg-card: #141c2e;
+    --bg-card-hover: #1e2a40;
+    --bg-input: #1a2235;
+    --bg-sidebar: #0d1424;
+    --bg-modal: #141c2e;
+    --bg-overlay: rgba(0, 0, 0, 0.65);
+    --bg-tooltip: #1e2a40;
+
+    /* Text */
+    --text-primary: #f0f4ff;
+    --text-secondary: #8b9abf;
+    --text-muted: #4a5a7a;
+    --text-inverse: #0b0f1a;
+    --text-link: #4f8ef7;
+    --text-placeholder: #3a4a6a;
+
+    /* Brand / Accent */
+    --accent-primary: #4f8ef7;
+    --accent-primary-hover: #6ba3ff;
+    --accent-primary-light: rgba(79, 142, 247, 0.12);
+    --accent-secondary: #7c3aed;
+    --accent-secondary-light: rgba(124, 58, 237, 0.12);
+    --accent-success: #10b981;
+    --accent-success-light: rgba(16, 185, 129, 0.12);
+    --accent-warning: #f59e0b;
+    --accent-warning-light: rgba(245, 158, 11, 0.12);
+    --accent-danger: #ef4444;
+    --accent-danger-light: rgba(239, 68, 68, 0.12);
+    --accent-info: #06b6d4;
+    --accent-info-light: rgba(6, 182, 212, 0.12);
+
+    /* Borders */
+    --border-primary: rgba(255, 255, 255, 0.07);
+    --border-secondary: rgba(255, 255, 255, 0.04);
+    --border-accent: rgba(79, 142, 247, 0.3);
+    --border-focus: #4f8ef7;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.35);
+    --shadow-accent: 0 4px 20px rgba(79, 142, 247, 0.25);
+    --shadow-glow: 0 0 24px rgba(79, 142, 247, 0.2);
+
+    /* Sidebar */
+    --sidebar-width: 240px;
+    --sidebar-collapsed-width: 64px;
+
+    /* Status Colors */
+    --status-active-bg: rgba(16, 185, 129, 0.12);
+    --status-active-text: #10b981;
+    --status-pending-bg: rgba(245, 158, 11, 0.12);
+    --status-pending-text: #f59e0b;
+    --status-blocked-bg: rgba(239, 68, 68, 0.12);
+    --status-blocked-text: #ef4444;
+    --status-draft-bg: rgba(139, 154, 191, 0.12);
+    --status-draft-text: #8b9abf;
+    --status-approved-bg: rgba(79, 142, 247, 0.12);
+    --status-approved-text: #4f8ef7;
+
+    /* Scrollbar */
+    --scrollbar-track: #111827;
+    --scrollbar-thumb: #1e2a40;
+    --scrollbar-thumb-hover: #2a3a58;
+
+    /* Theme toggle icon */
+    --theme-icon: "☀️";
+}
+
+/* ---- LIGHT THEME ---- */
+[data-theme="light"] {
+    /* Backgrounds */
+    --bg-primary: #f4f6fb;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #eef1f8;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8faff;
+    --bg-input: #f4f6fb;
+    --bg-sidebar: #ffffff;
+    --bg-modal: #ffffff;
+    --bg-overlay: rgba(0, 0, 0, 0.4);
+    --bg-tooltip: #1e2a40;
+
+    /* Text */
+    --text-primary: #0f172a;
+    --text-secondary: #4b5e82;
+    --text-muted: #94a3b8;
+    --text-inverse: #ffffff;
+    --text-link: #2563eb;
+    --text-placeholder: #94a3b8;
+
+    /* Brand / Accent */
+    --accent-primary: #2563eb;
+    --accent-primary-hover: #1d4ed8;
+    --accent-primary-light: rgba(37, 99, 235, 0.08);
+    --accent-secondary: #7c3aed;
+    --accent-secondary-light: rgba(124, 58, 237, 0.08);
+    --accent-success: #059669;
+    --accent-success-light: rgba(5, 150, 105, 0.08);
+    --accent-warning: #d97706;
+    --accent-warning-light: rgba(217, 119, 6, 0.08);
+    --accent-danger: #dc2626;
+    --accent-danger-light: rgba(220, 38, 38, 0.08);
+    --accent-info: #0284c7;
+    --accent-info-light: rgba(2, 132, 199, 0.08);
+
+    /* Borders */
+    --border-primary: rgba(0, 0, 0, 0.08);
+    --border-secondary: rgba(0, 0, 0, 0.04);
+    --border-accent: rgba(37, 99, 235, 0.3);
+    --border-focus: #2563eb;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.12);
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+    --shadow-accent: 0 4px 20px rgba(37, 99, 235, 0.15);
+    --shadow-glow: 0 0 24px rgba(37, 99, 235, 0.12);
+
+    /* Status Colors */
+    --status-active-bg: rgba(5, 150, 105, 0.08);
+    --status-active-text: #059669;
+    --status-pending-bg: rgba(217, 119, 6, 0.08);
+    --status-pending-text: #d97706;
+    --status-blocked-bg: rgba(220, 38, 38, 0.08);
+    --status-blocked-text: #dc2626;
+    --status-draft-bg: rgba(75, 94, 130, 0.08);
+    --status-draft-text: #4b5e82;
+    --status-approved-bg: rgba(37, 99, 235, 0.08);
+    --status-approved-text: #2563eb;
+
+    /* Scrollbar */
+    --scrollbar-track: #f4f6fb;
+    --scrollbar-thumb: #d1d9e6;
+    --scrollbar-thumb-hover: #b0bbcf;
+
+    --theme-icon: "🌙";
+}
+
+/* ---- TRANSITIONS for theme switch ---- */
+*,
+*::before,
+*::after {
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.2s ease,
+        box-shadow 0.25s ease;
+}
