@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VendorBridge — Create Account</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <style>
+      body {
+        overflow-x: hidden;
+      }
+
+      .auth-page {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 100vh;
+      }
+
+      /* ===== LEFT PANEL ===== */
+      .auth-left {
+        position: relative;
+        background: var(--bg-secondary);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 40px;
+        overflow: hidden;
+        border-right: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+      }
+
+      .auth-left::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse 80% 60% at 20% 30%,
+            rgba(79, 142, 247, 0.13) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 80% at 80% 70%,
+            rgba(124, 58, 237, 0.1) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 50% 50% at 50% 50%,
+            rgba(16, 185, 129, 0.05) 0%,
+            transparent 70%
+          );
+        animation: meshShift 12s ease-in-out infinite alternate;
+        pointer-events: none;
+      }
+
+      @keyframes meshShift {
+        0% {
+          opacity: 0.8;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+      }
+
+      .auth-left::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(
+            var(--border-primary) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, var(--border-primary) 1px, transparent 1px);
+        background-size: 48px 48px;
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        pointer-events: none;
+        animation: orbFloat 8s ease-in-out infinite;
+      }
+      .orb-1 {
+        width: 280px;
+        height: 280px;
+        background: rgba(79, 142, 247, 0.08);
+        top: -60px;
+        right: -60px;
+        animation-delay: 0s;
+      }
+      .orb-2 {
+        width: 200px;
+        height: 200px;
+        background: rgba(124, 58, 237, 0.07);
+        bottom: 60px;
+        left: -40px;
+        animation-delay: -4s;
+      }
+      .orb-3 {
+        width: 160px;
+        height: 160px;
+        background: rgba(16, 185, 129, 0.06);
+        top: 50%;
+        left: 50%;
+        animation-delay: -2s;
+      }
+      @keyframes orbFloat {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-20px) scale(1.05);
+        }
+      }
+
+      .auth-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+        animation: fadeSlideDown 0.6s ease both;
+      }
+      .auth-brand-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--accent-primary);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: 800;
+        color: #fff;
+        font-family: "Syne", sans-serif;
+        box-shadow: 0 4px 16px rgba(79, 142, 247, 0.35);
+        flex-shrink: 0;
+      }
+      .auth-brand-name {
+        font-family: "Syne", sans-serif;
+        font-size: 1.375rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+      }
+
+      .auth-left-content {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .auth-hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent-primary-light);
+        border: 1px solid var(--border-accent);
+        color: var(--accent-primary);
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        animation: fadeSlideDown 0.6s 0.1s ease both;
+      }
+      .auth-hero-tag::before {
+        content: "●";
+        font-size: 8px;
+        animation: blink 2s infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .auth-hero h1 {
+        font-family: "Syne", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+        animation: fadeSlideDown 0.6s 0.15s ease both;
+      }
+      .auth-hero h1 span {
+        background: linear-gradient(135deg, var(--accent-primary), #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .auth-hero p {
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        max-width: 400px;
+        animation: fadeSlideDown 0.6s 0.2s ease both;
+      }
+
+      /* Step progress on left */
+      .reg-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 36px;
+        animation: fadeSlideDown 0.6s 0.25s ease both;
+      }
+      .reg-step {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--border-primary);
+        background: var(--bg-tertiary);
+        transition: all 0.3s;
+      }
+      .reg-step.active {
+        border-color: var(--border-accent);
+        background: var(--accent-primary-light);
+      }
+      .reg-step.done {
+        border-color: rgba(16, 185, 129, 0.3);
+        background: rgba(16, 185, 129, 0.06);
+      }
+      .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--bg-input);
+        border: 1px solid var(--border-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        flex-shrink: 0;
+        transition: all 0.3s;
+      }
+      .reg-step.active .step-num {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: #fff;
+        box-shadow: 0 0 0 3px var(--accent-primary-light);
+      }
+      .reg-step.done .step-num {
+        background: rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.4);
+        color: #10b981;
+      }
+      .step-info {
+        flex: 1;
+      }
+      .step-title {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .reg-step.active .step-title {
+        color: var(--accent-primary);
+      }
+      .reg-step.done .step-title {
+        color: #10b981;
+      }
+      .step-desc {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 1px;
+      }
+
+      .auth-stats {
+        display: flex;
+        gap: 32px;
+        padding-top: 32px;
+        border-top: 1px solid var(--border-primary);
+        position: relative;
+        z-index: 1;
+        animation: fadeSlideUp 0.6s 0.3s ease both;
+      }
+      .auth-stat-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .auth-stat-value {
+        font-family: "Syne", sans-serif;
+        font-size: 1.375rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+      }
+      .auth-stat-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      /* ===== RIGHT PANEL ===== */
+      .auth-right {
+        background: var(--bg-primary);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 40px;
+        overflow-y: auto;
+      }
+
+      .auth-form-container {
+        width: 100%;
+        max-width: 460px;
+        padding: 20px 0;
+        animation: fadeSlideUp 0.5s 0.1s ease both;
+      }
+
+      .auth-form-header {
+        margin-bottom: 28px;
+      }
+      .auth-form-header h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.625rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        margin-bottom: 6px;
+      }
+      .auth-form-header p {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+      }
+
+      /* Step indicator (top of form) */
+      .form-step-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 28px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        padding: 4px;
+      }
+      .fsi-step {
+        flex: 1;
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: default;
+        transition: all 0.2s;
+      }
+      .fsi-step.active {
+        background: var(--accent-primary);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(79, 142, 247, 0.35);
+      }
+      .fsi-step.done {
+        color: #10b981;
+      }
+
+      /* Form fields */
+      .auth-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .auth-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .auth-field label {
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+      .auth-field label span {
+        color: var(--accent-danger);
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .field-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .field-icon {
+        position: absolute;
+        left: 13px;
+        font-size: 15px;
+        color: var(--text-muted);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .field-input-wrap input,
+      .field-input-wrap select {
+        width: 100%;
+        padding: 10px 13px 10px 40px;
+        background: var(--bg-input);
+        border: 1px solid var(--border-primary);
+        border-radius: 9px;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        font-family: "DM Sans", sans-serif;
+        transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+        appearance: none;
+      }
+      .field-input-wrap select {
+        cursor: pointer;
+      }
+      .field-input-wrap input::placeholder {
+        color: var(--text-placeholder);
+      }
+      .field-input-wrap input:focus,
+      .field-input-wrap select:focus {
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 3px var(--accent-primary-light);
+        outline: none;
+      }
+      .field-input-wrap input.error,
+      .field-input-wrap select.error {
+        border-color: var(--accent-danger);
+        box-shadow: 0 0 0 3px var(--accent-danger-light);
+      }
+      .field-input-wrap input.valid {
+        border-color: rgba(16, 185, 129, 0.5);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+
+      .field-error {
+        font-size: 0.75rem;
+        color: var(--accent-danger);
+        display: none;
+        align-items: center;
+        gap: 4px;
+      }
+      .field-error.show {
+        display: flex;
+      }
+      .field-hint {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      .pwd-toggle {
+        position: absolute;
+        right: 13px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 15px;
+        padding: 0;
+        line-height: 1;
+        transition: color 0.15s;
+        z-index: 1;
+      }
+      .pwd-toggle:hover {
+        color: var(--text-primary);
+      }
+      .field-input-wrap input.has-toggle {
+        padding-right: 40px;
+      }
+
+      /* Password strength */
+      .pwd-strength {
+        margin-top: 6px;
+      }
+      .pwd-strength-bar {
+        height: 4px;
+        border-radius: 2px;
+        background: var(--border-primary);
+        overflow: hidden;
+      }
+      .pwd-strength-fill {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.3s, background 0.3s;
+        width: 0%;
+      }
+      .pwd-strength-label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      /* Role selector */
+      .role-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 2px;
+      }
+      .role-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 11px 13px;
+        background: var(--bg-input);
+        border: 1px solid var(--border-primary);
+        border-radius: 9px;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+      .role-option:hover {
+        border-color: var(--border-accent);
+        color: var(--text-primary);
+      }
+      .role-option input {
+        display: none;
+      }
+      .role-option.selected {
+        border-color: var(--accent-primary);
+        background: var(--accent-primary-light);
+        color: var(--accent-primary);
+      }
+      .role-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .role-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .role-name {
+        font-weight: 600;
+      }
+      .role-desc {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+      .role-option.selected .role-desc {
+        color: var(--accent-primary);
+        opacity: 0.7;
+      }
+
+      /* Step panels */
+      .form-step {
+        display: none;
+      }
+      .form-step.active {
+        display: block;
+      }
+
+      /* Navigation buttons */
+      .step-nav {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .btn-back {
+        padding: 11px 20px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: 9px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-back:hover {
+        border-color: var(--border-accent);
+        color: var(--text-primary);
+      }
+
+      .auth-submit {
+        flex: 1;
+        padding: 11px;
+        background: var(--accent-primary);
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(79, 142, 247, 0.3);
+        letter-spacing: 0.01em;
+      }
+      .auth-submit:hover:not(:disabled) {
+        background: var(--accent-primary-hover);
+        box-shadow: 0 6px 20px rgba(79, 142, 247, 0.4);
+        transform: translateY(-1px);
+      }
+      .auth-submit:active {
+        transform: translateY(0);
+      }
+      .auth-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .auth-submit .btn-spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      .auth-submit.loading .btn-spinner {
+        display: block;
+      }
+      .auth-submit.loading .btn-text {
+        opacity: 0.7;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Terms */
+      .terms-check {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        margin-top: 4px;
+      }
+      .terms-check input {
+        width: 15px;
+        height: 15px;
+        accent-color: var(--accent-primary);
+        cursor: pointer;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+      .terms-check a {
+        color: var(--accent-primary);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .terms-check a:hover {
+        text-decoration: underline;
+      }
+
+      .auth-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 20px 0;
+      }
+      .auth-divider::before,
+      .auth-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border-primary);
+      }
+      .auth-divider span {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        white-space: nowrap;
+      }
+
+      .auth-footer-link {
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+      }
+      .auth-footer-link a {
+        color: var(--accent-primary);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .auth-footer-link a:hover {
+        text-decoration: underline;
+      }
+
+      .auth-theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+      }
+
+      /* Success state */
+      .reg-success {
+        display: none;
+        text-align: center;
+        padding: 40px 20px;
+        animation: fadeSlideUp 0.5s ease both;
+      }
+      .reg-success.show {
+        display: block;
+      }
+      .success-icon {
+        font-size: 56px;
+        margin-bottom: 16px;
+        animation: popIn 0.5s ease both;
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        70% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .reg-success h3 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .reg-success p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      /* Animations */
+      @keyframes fadeSlideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      [data-theme="light"] .auth-right {
+        background: #f4f6fb;
+      }
+      [data-theme="light"] .auth-left {
+        background: #fff;
+      }
+
+      @media (max-width: 900px) {
+        .auth-page {
+          grid-template-columns: 1fr;
+        }
+        .auth-left {
+          display: none;
+        }
+        .auth-right {
+          padding: 24px;
+          align-items: flex-start;
+        }
+        .field-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-theme-toggle">
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+
+    <div class="auth-page">
+      <!-- ===== LEFT PANEL ===== -->
+      <div class="auth-left">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+        <div class="auth-brand">
+          <div class="auth-brand-icon">V</div>
+          <span class="auth-brand-name">VendorBridge</span>
+        </div>
+
+        <div class="auth-left-content">
+          <div class="auth-hero-tag">Get Started Free</div>
+          <div class="auth-hero">
+            <h1>Join the<br />Future of<br /><span>Procurement.</span></h1>
+            <p>
+              Set up your account in minutes and start streamlining your
+              procurement operations with intelligent workflows.
+            </p>
+          </div>
+
+          <div class="reg-steps" id="leftSteps">
+            <div class="reg-step active" id="lstep-1">
+              <div class="step-num">1</div>
+              <div class="step-info">
+                <div class="step-title">Account Details</div>
+                <div class="step-desc">Name, email & organization</div>
+              </div>
+            </div>
+            <div class="reg-step" id="lstep-2">
+              <div class="step-num">2</div>
+              <div class="step-info">
+                <div class="step-title">Your Role</div>
+                <div class="step-desc">How you'll use VendorBridge</div>
+              </div>
+            </div>
+            <div class="reg-step" id="lstep-3">
+              <div class="step-num">3</div>
+              <div class="step-info">
+                <div class="step-title">Secure Password</div>
+                <div class="step-desc">Protect your account</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-stats">
+          <div class="auth-stat-item">
+            <span class="auth-stat-value">4</span
+            ><span class="auth-stat-label">User Roles</span>
+          </div>
+          <div class="auth-stat-item">
+            <span class="auth-stat-value">11</span
+            ><span class="auth-stat-label">Core Modules</span>
+          </div>
+          <div class="auth-stat-item">
+            <span class="auth-stat-value">100%</span
+            ><span class="auth-stat-label">Audit Tracked</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== RIGHT PANEL ===== -->
+      <div class="auth-right">
+        <div class="auth-form-container">
+          <!-- Form header -->
+          <div class="auth-form-header" id="formHeader">
+            <h2>Create your account ✨</h2>
+            <p>Fill in your details to get started with VendorBridge</p>
+          </div>
+
+          <!-- Step indicator -->
+          <div class="form-step-indicator" id="stepIndicator">
+            <div class="fsi-step active" id="fsi-1">① Account</div>
+            <div class="fsi-step" id="fsi-2">② Role</div>
+            <div class="fsi-step" id="fsi-3">③ Security</div>
+          </div>
+
+          <!-- ===== STEP 1: Account Details ===== -->
+          <form id="registerForm" novalidate>
+            <div class="form-step active" id="step1">
+              <div class="auth-fields">
+                <div class="field-row">
+                  <div class="auth-field">
+                    <label for="firstName">First Name <span>*</span></label>
+                    <div class="field-input-wrap">
+                      <span class="field-icon">👤</span>
+                      <input
+                        type="text"
+                        id="firstName"
+                        placeholder="Saumya"
+                        autocomplete="given-name"
+                      />
+                    </div>
+                    <div class="field-error" id="firstNameError">
+                      ⚠ First name is required
+                    </div>
+                  </div>
+                  <div class="auth-field">
+                    <label for="lastName">Last Name <span>*</span></label>
+                    <div class="field-input-wrap">
+                      <span class="field-icon">👤</span>
+                      <input
+                        type="text"
+                        id="lastName"
+                        placeholder="Nayak"
+                        autocomplete="family-name"
+                      />
+                    </div>
+                    <div class="field-error" id="lastNameError">
+                      ⚠ Last name is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="auth-field">
+                  <label for="email">Work Email <span>*</span></label>
+                  <div class="field-input-wrap">
+                    <span class="field-icon">✉</span>
+                    <input
+                      type="email"
+                      id="email"
+                      placeholder="you@company.com"
+                      autocomplete="email"
+                    />
+                  </div>
+                  <div class="field-error" id="emailError">
+                    ⚠ Enter a valid email address
+                  </div>
+                </div>
+
+                <div class="auth-field">
+                  <label for="phone">Phone Number</label>
+                  <div class="field-input-wrap">
+                    <span class="field-icon">📱</span>
+                    <input
+                      type="tel"
+                      id="phone"
+                      placeholder="10-digit mobile number"
+                      autocomplete="tel"
+                    />
+                  </div>
+                  <div class="field-error" id="phoneError">
+                    ⚠ Enter a valid 10-digit number
+                  </div>
+                  <span class="field-hint"
+                    >Optional — used for critical procurement alerts</span
+                  >
+                </div>
+
+                <div class="auth-field">
+                  <label for="company"
+                    >Organization / Company <span>*</span></label
+                  >
+                  <div class="field-input-wrap">
+                    <span class="field-icon">🏢</span>
+                    <input
+                      type="text"
+                      id="company"
+                      placeholder="Acme Corp"
+                      autocomplete="organization"
+                    />
+                  </div>
+                  <div class="field-error" id="companyError">
+                    ⚠ Organization name is required
+                  </div>
+                </div>
+              </div>
+              <div class="step-nav">
+                <button type="button" class="auth-submit" onclick="goStep(2)">
+                  <span class="btn-text">Continue</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ===== STEP 2: Role Selection ===== -->
+            <div class="form-step" id="step2">
+              <div class="auth-fields">
+                <div class="auth-field">
+                  <label>Select Your Role <span>*</span></label>
+                  <div class="role-selector">
+                    <label
+                      class="role-option"
+                      onclick="selectRole(this,'procurement_officer')"
+                    >
+                      <input
+                        type="radio"
+                        name="role"
+                        value="procurement_officer"
+                      />
+                      <span class="role-icon">📋</span>
+                      <span class="role-text">
+                        <span class="role-name">Procurement Officer</span>
+                        <span class="role-desc"
+                          >Create RFQs, compare quotes, generate POs &
+                          invoices</span
+                        >
+                      </span>
+                    </label>
+                    <label
+                      class="role-option"
+                      onclick="selectRole(this,'vendor')"
+                    >
+                      <input type="radio" name="role" value="vendor" />
+                      <span class="role-icon">🏭</span>
+                      <span class="role-text">
+                        <span class="role-name">Vendor</span>
+                        <span class="role-desc"
+                          >Submit quotations & track your RFQ invitations</span
+                        >
+                      </span>
+                    </label>
+                    <label
+                      class="role-option"
+                      onclick="selectRole(this,'manager')"
+                    >
+                      <input type="radio" name="role" value="manager" />
+                      <span class="role-icon">✅</span>
+                      <span class="role-text">
+                        <span class="role-name">Manager / Approver</span>
+                        <span class="role-desc"
+                          >Approve or reject procurement requests</span
+                        >
+                      </span>
+                    </label>
+                    <label
+                      class="role-option"
+                      onclick="selectRole(this,'admin')"
+                    >
+                      <input type="radio" name="role" value="admin" />
+                      <span class="role-icon">⚙️</span>
+                      <span class="role-text">
+                        <span class="role-name">Admin</span>
+                        <span class="role-desc"
+                          >Manage users, vendors & view full analytics</span
+                        >
+                      </span>
+                    </label>
+                  </div>
+                  <div class="field-error" id="roleError">
+                    ⚠ Please select a role
+                  </div>
+                </div>
+
+                <!-- Vendor-specific fields -->
+                <div id="vendorFields" style="display: none">
+                  <div class="auth-fields" style="gap: 12px">
+                    <div class="auth-field">
+                      <label for="gstNumber">GST Number</label>
+                      <div class="field-input-wrap">
+                        <span class="field-icon">🧾</span>
+                        <input
+                          type="text"
+                          id="gstNumber"
+                          placeholder="22AAAAA0000A1Z5"
+                          maxlength="15"
+                          style="text-transform: uppercase"
+                        />
+                      </div>
+                      <div class="field-error" id="gstError">
+                        ⚠ Enter a valid 15-character GST number
+                      </div>
+                    </div>
+                    <div class="auth-field">
+                      <label for="vendorCategory">Vendor Category</label>
+                      <div class="field-input-wrap">
+                        <span class="field-icon">🏷️</span>
+                        <select id="vendorCategory">
+                          <option value="">Select category...</option>
+                          <option>IT & Software</option>
+                          <option>Hardware & Equipment</option>
+                          <option>Office Supplies</option>
+                          <option>Logistics & Transport</option>
+                          <option>Marketing & Media</option>
+                          <option>Consulting & Services</option>
+                          <option>Manufacturing</option>
+                          <option>Other</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="step-nav">
+                <button type="button" class="btn-back" onclick="goStep(1)">
+                  ← Back
+                </button>
+                <button type="button" class="auth-submit" onclick="goStep(3)">
+                  <span class="btn-text">Continue</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ===== STEP 3: Password ===== -->
+            <div class="form-step" id="step3">
+              <div class="auth-fields">
+                <div class="auth-field">
+                  <label for="password">Password <span>*</span></label>
+                  <div class="field-input-wrap">
+                    <span class="field-icon">🔒</span>
+                    <input
+                      type="password"
+                      id="password"
+                      placeholder="Create a strong password"
+                      autocomplete="new-password"
+                      class="has-toggle"
+                      oninput="checkStrength(this.value)"
+                    />
+                    <button
+                      type="button"
+                      class="pwd-toggle"
+                      onclick="togglePwd('password','pwdToggle1')"
+                    >
+                      👁
+                    </button>
+                  </div>
+                  <div class="pwd-strength">
+                    <div class="pwd-strength-bar">
+                      <div class="pwd-strength-fill" id="strengthFill"></div>
+                    </div>
+                    <div class="pwd-strength-label" id="strengthLabel">
+                      Enter a password
+                    </div>
+                  </div>
+                  <div class="field-error" id="passwordError">
+                    ⚠ Password must be at least 8 characters
+                  </div>
+                </div>
+
+                <div class="auth-field">
+                  <label for="confirmPassword"
+                    >Confirm Password <span>*</span></label
+                  >
+                  <div class="field-input-wrap">
+                    <span class="field-icon">🔒</span>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      placeholder="Repeat your password"
+                      autocomplete="new-password"
+                      class="has-toggle"
+                    />
+                    <button
+                      type="button"
+                      class="pwd-toggle"
+                      onclick="togglePwd('confirmPassword','pwdToggle2')"
+                    >
+                      👁
+                    </button>
+                  </div>
+                  <div class="field-error" id="confirmPasswordError">
+                    ⚠ Passwords do not match
+                  </div>
+                </div>
+
+                <label class="terms-check">
+                  <input type="checkbox" id="agreeTerms" />
+                  <span
+                    >I agree to the <a href="#">Terms of Service</a> and
+                    <a href="#">Privacy Policy</a>. I understand that
+                    VendorBridge will manage my procurement data.</span
+                  >
+                </label>
+                <div class="field-error" id="termsError">
+                  ⚠ You must agree to the terms
+                </div>
+              </div>
+              <div class="step-nav">
+                <button type="button" class="btn-back" onclick="goStep(2)">
+                  ← Back
+                </button>
+                <button type="submit" class="auth-submit" id="submitBtn">
+                  <div class="btn-spinner"></div>
+                  <span class="btn-text">Create Account</span>
+                  <span class="btn-arrow">🚀</span>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- ===== SUCCESS STATE ===== -->
+          <div class="reg-success" id="regSuccess">
+            <div class="success-icon">🎉</div>
+            <h3>Account Created!</h3>
+            <p>
+              Welcome to VendorBridge. Your account has been set up
+              successfully.<br />Redirecting you to sign in…
+            </p>
+            <a
+              href="login.html"
+              class="auth-submit"
+              style="
+                display: inline-flex;
+                width: auto;
+                padding: 11px 28px;
+                text-decoration: none;
+                margin: 0 auto;
+              "
+            >
+              Go to Login →
+            </a>
+          </div>
+
+          <div class="auth-divider"><span>Already have an account?</span></div>
+          <div class="auth-footer-link">
+            <a href="login.html">← Back to Sign In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script>
+      // Redirect if already logged in
+      if (API.isLoggedIn()) window.location.href = "dashboard.html";
+
+      let currentStep = 1;
+
+      // ---- Step Navigation ----
+      function goStep(target) {
+        if (target > currentStep && !validateStep(currentStep)) return;
+
+        // Animate out current
+        const curr = document.getElementById(`step${currentStep}`);
+        curr.classList.remove("active");
+
+        currentStep = target;
+
+        const next = document.getElementById(`step${currentStep}`);
+        next.classList.add("active");
+
+        updateIndicators();
+        updateFormHeader();
+      }
+
+      function updateIndicators() {
+        for (let i = 1; i <= 3; i++) {
+          const fsi = document.getElementById(`fsi-${i}`);
+          const lst = document.getElementById(`lstep-${i}`);
+
+          fsi.classList.remove("active", "done");
+          lst.classList.remove("active", "done");
+
+          if (i < currentStep) {
+            fsi.classList.add("done");
+            lst.classList.add("done");
+            lst.querySelector(".step-num").textContent = "✓";
+          } else if (i === currentStep) {
+            fsi.classList.add("active");
+            lst.classList.add("active");
+          }
+        }
+      }
+
+      const headers = [
+        {
+          title: "Create your account ✨",
+          sub: "Fill in your details to get started with VendorBridge",
+        },
+        {
+          title: "Choose your role 🎯",
+          sub: "This determines your access level and workflow",
+        },
+        {
+          title: "Secure your account 🔐",
+          sub: "Create a strong password to protect your data",
+        },
+      ];
+
+      function updateFormHeader() {
+        const h = headers[currentStep - 1];
+        document.querySelector(".auth-form-header h2").textContent = h.title;
+        document.querySelector(".auth-form-header p").textContent = h.sub;
+      }
+
+      // ---- Password toggle ----
+      function togglePwd(inputId, btnId) {
+        const inp = document.getElementById(inputId);
+        const btns = document.querySelectorAll(`.pwd-toggle`);
+        const btn = document.getElementById(btnId);
+        if (!btn) {
+          // find by proximity
+          return;
+        }
+        if (inp.type === "password") {
+          inp.type = "text";
+          btn.textContent = "🙈";
+        } else {
+          inp.type = "password";
+          btn.textContent = "👁";
+        }
+      }
+
+      // ---- Password strength ----
+      function checkStrength(val) {
+        const fill = document.getElementById("strengthFill");
+        const label = document.getElementById("strengthLabel");
+
+        let score = 0;
+        if (val.length >= 8) score++;
+        if (val.length >= 12) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+
+        const levels = [
+          { pct: "0%", color: "transparent", text: "Enter a password" },
+          { pct: "25%", color: "#ef4444", text: "Weak" },
+          { pct: "50%", color: "#f59e0b", text: "Fair" },
+          { pct: "75%", color: "#3b82f6", text: "Good" },
+          { pct: "100%", color: "#10b981", text: "Strong 💪" },
+        ];
+
+        const lvl = val.length === 0 ? levels[0] : levels[Math.min(score, 4)];
+        fill.style.width = lvl.pct;
+        fill.style.background = lvl.color;
+        label.textContent = lvl.text;
+        label.style.color =
+          lvl.color === "transparent" ? "var(--text-muted)" : lvl.color;
+      }
+
+      // ---- Role selection ----
+      function selectRole(el, role) {
+        document
+          .querySelectorAll(".role-option")
+          .forEach((r) => r.classList.remove("selected"));
+        el.classList.add("selected");
+        el.querySelector("input").checked = true;
+        document.getElementById("roleError").classList.remove("show");
+
+        // Show vendor fields
+        const vf = document.getElementById("vendorFields");
+        vf.style.display = role === "vendor" ? "block" : "none";
+      }
+
+      // ---- Validation ----
+      function validateStep(step) {
+        if (step === 1) {
+          let ok = true;
+          const fields = [
+            {
+              id: "firstName",
+              errId: "firstNameError",
+              rule: "required",
+              msg: "First name is required",
+            },
+            {
+              id: "lastName",
+              errId: "lastNameError",
+              rule: "required",
+              msg: "Last name is required",
+            },
+            {
+              id: "email",
+              errId: "emailError",
+              rule: "email",
+              msg: "Enter a valid email address",
+            },
+            {
+              id: "company",
+              errId: "companyError",
+              rule: "required",
+              msg: "Organization name is required",
+            },
+          ];
+          fields.forEach((f) => {
+            const el = document.getElementById(f.id);
+            const err = document.getElementById(f.errId);
+            el.classList.remove("error");
+            err.classList.remove("show");
+            let fail = false;
+            if (f.rule === "required" && !el.value.trim()) fail = true;
+            if (
+              f.rule === "email" &&
+              !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value)
+            )
+              fail = true;
+            if (fail) {
+              el.classList.add("error");
+              err.textContent = "⚠ " + f.msg;
+              err.classList.add("show");
+              ok = false;
+            }
+          });
+          // Optional phone
+          const phone = document.getElementById("phone");
+          if (phone.value.trim() && !/^[6-9]\d{9}$/.test(phone.value.trim())) {
+            phone.classList.add("error");
+            document.getElementById("phoneError").classList.add("show");
+            ok = false;
+          }
+          return ok;
+        }
+
+        if (step === 2) {
+          const role = document.querySelector('input[name="role"]:checked');
+          if (!role) {
+            document.getElementById("roleError").classList.add("show");
+            return false;
+          }
+          // Validate GST if vendor
+          if (role.value === "vendor") {
+            const gst = document.getElementById("gstNumber").value.trim();
+            if (
+              gst &&
+              !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(
+                gst.toUpperCase()
+              )
+            ) {
+              document.getElementById("gstNumber").classList.add("error");
+              document.getElementById("gstError").classList.add("show");
+              return false;
+            }
+          }
+          return true;
+        }
+
+        if (step === 3) {
+          let ok = true;
+          const pwd = document.getElementById("password");
+          const cpwd = document.getElementById("confirmPassword");
+          const terms = document.getElementById("agreeTerms");
+
+          [pwd, cpwd].forEach((el) => el.classList.remove("error"));
+          ["passwordError", "confirmPasswordError", "termsError"].forEach(
+            (id) => {
+              document.getElementById(id).classList.remove("show");
+            }
+          );
+
+          if (!pwd.value || pwd.value.length < 8) {
+            pwd.classList.add("error");
+            document.getElementById("passwordError").classList.add("show");
+            ok = false;
+          }
+          if (pwd.value !== cpwd.value) {
+            cpwd.classList.add("error");
+            document
+              .getElementById("confirmPasswordError")
+              .classList.add("show");
+            ok = false;
+          }
+          if (!terms.checked) {
+            document.getElementById("termsError").classList.add("show");
+            ok = false;
+          }
+          return ok;
+        }
+
+        return true;
+      }
+
+      // ---- Form submit ----
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (!validateStep(3)) return;
+
+          const btn = document.getElementById("submitBtn");
+          btn.classList.add("loading");
+          btn.disabled = true;
+
+          const role = document.querySelector(
+            'input[name="role"]:checked'
+          ).value;
+
+          const payload = {
+            first_name: document.getElementById("firstName").value.trim(),
+            last_name: document.getElementById("lastName").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone: document.getElementById("phone").value.trim() || null,
+            company: document.getElementById("company").value.trim(),
+            role,
+            password: document.getElementById("password").value,
+          };
+
+          if (role === "vendor") {
+            payload.gst_number =
+              document.getElementById("gstNumber").value.trim().toUpperCase() ||
+              null;
+            payload.vendor_category =
+              document.getElementById("vendorCategory").value || null;
+          }
+
+          try {
+            await API.post("/auth/register", payload);
+
+            // Show success
+            document.getElementById("registerForm").style.display = "none";
+            document.getElementById("stepIndicator").style.display = "none";
+            document
+              .getElementById("formHeader")
+              .querySelector("h2").textContent = "You're all set! 🎉";
+            document
+              .getElementById("formHeader")
+              .querySelector("p").textContent =
+              "Your VendorBridge account is ready.";
+            document.getElementById("regSuccess").classList.add("show");
+
+            // Update left panel
+            for (let i = 1; i <= 3; i++) {
+              const lst = document.getElementById(`lstep-${i}`);
+              lst.classList.remove("active");
+              lst.classList.add("done");
+              lst.querySelector(".step-num").textContent = "✓";
+            }
+
+            Toast.success(
+              "Account created!",
+              `Welcome to VendorBridge, ${payload.first_name}!`
+            );
+            setTimeout(() => (window.location.href = "login.html"), 3000);
+          } catch (err) {
+            btn.classList.remove("loading");
+            btn.disabled = false;
+            Toast.error(
+              "Registration Failed",
+              err.message || "Could not create account. Please try again."
+            );
+          }
+        });
+
+      // Clear error on input
+      document.querySelectorAll("input, select").forEach((el) => {
+        el.addEventListener("input", function () {
+          this.classList.remove("error");
+          const errEl = document.getElementById(this.id + "Error");
+          if (errEl) errEl.classList.remove("show");
+        });
+      });
+    </script>
+  </body>
+</html>

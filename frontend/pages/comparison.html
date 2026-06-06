@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quote Comparison — VendorBridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <style>
+      :root {
+        --transition-fast: 0.18s ease;
+      }
+      .page-wrapper {
+        display: flex;
+        min-height: 100vh;
+        background: var(--bg-primary);
+        font-family: "DM Sans", sans-serif;
+      }
+      .main-content {
+        margin-left: 240px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        height: 64px;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        backdrop-filter: blur(8px);
+        flex-shrink: 0;
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .topbar-left h1 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+      }
+      .topbar-left p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        padding: 4px;
+      }
+      .page-body {
+        padding: 24px;
+        flex: 1;
+      }
+
+      .rfq-selector-wrap {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 14px;
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        animation: fadeUp 0.35s ease both;
+      }
+      .rfq-selector-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+      .rfq-selector-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .rfq-select {
+        flex: 1;
+        min-width: 220px;
+        padding: 10px 14px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.88rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        cursor: pointer;
+        transition: border-color var(--transition-fast);
+      }
+      .rfq-select:focus {
+        border-color: var(--accent-primary);
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: var(--accent-primary);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: opacity var(--transition-fast),
+          transform var(--transition-fast);
+      }
+      .btn-primary:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: opacity var(--transition-fast);
+      }
+      .btn-ghost:hover {
+        opacity: 0.8;
+      }
+
+      .rfq-info-banner {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-left: 3px solid var(--accent-primary);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        display: none;
+        animation: fadeUp 0.3s ease both;
+      }
+      .rfq-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 14px;
+      }
+      .rfi-lbl {
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .rfi-val {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 2px;
+      }
+
+      .comparison-section {
+        animation: fadeUp 0.4s 0.05s ease both;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .section-sub {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      .compare-table-wrap {
+        overflow-x: auto;
+        border-radius: 14px;
+        border: 1px solid var(--border-primary);
+        margin-bottom: 24px;
+      }
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+      }
+      .compare-table th {
+        padding: 12px 16px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        background: var(--bg-secondary);
+        text-align: left;
+        border-bottom: 1px solid var(--border-primary);
+        white-space: nowrap;
+      }
+      .compare-table td {
+        padding: 14px 16px;
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--border-secondary);
+        vertical-align: middle;
+      }
+      .compare-table tr:last-child td {
+        border-bottom: none;
+      }
+      .compare-table tr:hover td {
+        background: var(--bg-tertiary);
+      }
+      .compare-table tr.winner-row td {
+        background: rgba(16, 185, 129, 0.05);
+      }
+      .compare-table tr.winner-row td:first-child {
+        border-left: 3px solid #10b981;
+      }
+
+      .vendor-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .vendor-avatar-sm {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+        font-size: 0.75rem;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .vendor-name-sm {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-primary);
+      }
+      .vendor-email-sm {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+      }
+
+      .amount-cell {
+        font-family: "Syne", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+      }
+      .amount-lowest {
+        color: #10b981;
+      }
+      .amount-highest {
+        color: #ef4444;
+      }
+      .amount-mid {
+        color: var(--text-primary);
+      }
+
+      .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+      .badge-status::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .bs-submitted {
+        background: rgba(79, 142, 247, 0.1);
+        color: #4f8ef7;
+      }
+      .bs-under_review {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+      }
+      .bs-accepted {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .bs-rejected {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+
+      .winner-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 100px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+      }
+      .saving-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 100px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        background: rgba(79, 142, 247, 0.1);
+        color: #4f8ef7;
+      }
+
+      .bar-chart-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+      .bar-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .bar-label {
+        width: 160px;
+        flex-shrink: 0;
+      }
+      .bar-vendor {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .bar-amount-label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 1px;
+      }
+      .bar-track {
+        flex: 1;
+        height: 32px;
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+      }
+      .bar-fill {
+        height: 100%;
+        border-radius: 8px;
+        transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+        min-width: 40px;
+      }
+      .bar-fill-val {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #fff;
+        white-space: nowrap;
+      }
+
+      .insight-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .insight-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+      .insight-icon {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+      }
+      .insight-val {
+        font-family: "Syne", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.1;
+      }
+      .insight-lbl {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+
+      .action-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 16px 20px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        margin-bottom: 24px;
+      }
+      .action-bar-label {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        flex: 1;
+      }
+      .mbtn {
+        padding: 9px 20px;
+        border-radius: 9px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: opacity 0.15s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .mbtn:hover {
+        opacity: 0.85;
+      }
+      .mbtn-success {
+        background: #10b981;
+        color: #fff;
+      }
+      .mbtn-warning {
+        background: #f59e0b;
+        color: #fff;
+      }
+      .mbtn-ghost {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-primary);
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        color: var(--text-muted);
+        gap: 12px;
+        text-align: center;
+      }
+      .empty-state .es-icon {
+        font-size: 3.5rem;
+        opacity: 0.3;
+      }
+      .empty-state h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+      }
+      .empty-state p {
+        font-size: 0.82rem;
+      }
+
+      .skeleton {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 14px;
+        padding: 20px;
+        animation: shimmer 1.4s infinite;
+      }
+      @keyframes shimmer {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        background: rgba(0, 0, 0, 0.65);
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-backdrop.show {
+        display: flex;
+      }
+      .modal-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 480px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-xl);
+        animation: slideUp 0.25s ease;
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        background: var(--bg-card);
+        z-index: 1;
+      }
+      .modal-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .modal-close {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: var(--bg-tertiary);
+        border-radius: 7px;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background var(--transition-fast);
+      }
+      .modal-close:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .modal-body {
+        padding: 24px;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 16px 24px;
+        border-top: 1px solid var(--border-primary);
+      }
+      .confirm-text {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+      .confirm-highlight {
+        font-family: "Syne", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #10b981;
+        display: block;
+        margin: 12px 0;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 900px) {
+        .main-content {
+          margin-left: 0;
+        }
+        .mobile-menu-btn {
+          display: flex;
+          align-items: center;
+        }
+        .page-body {
+          padding: 16px;
+        }
+      }
+      @media (max-width: 600px) {
+        .rfq-selector-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .insight-cards {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div id="sidebar-root"></div>
+      <div class="main-content">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            <div>
+              <h1>Quote Comparison</h1>
+              <p id="topbar-sub">Compare vendor quotes side-by-side</p>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <button class="btn-ghost" id="export-btn" style="display: none">
+              ⬇ Export CSV
+            </button>
+          </div>
+        </header>
+
+        <div class="page-body">
+          <div class="rfq-selector-wrap">
+            <div class="rfq-selector-label">Select RFQ to Compare</div>
+            <div class="rfq-selector-row">
+              <select class="rfq-select" id="rfq-select">
+                <option value="">— Choose an RFQ —</option>
+              </select>
+              <button class="btn-primary" onclick="loadComparison()">
+                ⚖ Compare
+              </button>
+            </div>
+          </div>
+
+          <div id="rfq-info-banner" class="rfq-info-banner">
+            <div class="rfq-info-grid">
+              <div>
+                <div class="rfi-lbl">RFQ Title</div>
+                <div class="rfi-val" id="bi-title">—</div>
+              </div>
+              <div>
+                <div class="rfi-lbl">Category</div>
+                <div class="rfi-val" id="bi-category">—</div>
+              </div>
+              <div>
+                <div class="rfi-lbl">Budget</div>
+                <div class="rfi-val" id="bi-budget">—</div>
+              </div>
+              <div>
+                <div class="rfi-lbl">Deadline</div>
+                <div class="rfi-val" id="bi-deadline">—</div>
+              </div>
+              <div>
+                <div class="rfi-lbl">Status</div>
+                <div class="rfi-val" id="bi-status">—</div>
+              </div>
+              <div>
+                <div class="rfi-lbl">Quotes Received</div>
+                <div class="rfi-val" id="bi-count">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="comparison-area">
+            <div class="empty-state">
+              <div class="es-icon">⚖️</div>
+              <h3>No RFQ selected</h3>
+              <p>
+                Choose an RFQ above to compare vendor quotations side-by-side.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="accept-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">Accept Quotation</span>
+          <button class="modal-close" onclick="closeModal('accept-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="confirm-text">
+            You are about to accept the quotation from:
+            <span class="confirm-highlight" id="accept-vendor-name">—</span>
+            at an amount of <strong id="accept-amount">—</strong>.<br /><br />
+            All other submitted quotations for this RFQ will be automatically
+            rejected and the RFQ will be marked as <strong>Awarded</strong>.
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="mbtn mbtn-ghost" onclick="closeModal('accept-modal')">
+            Cancel
+          </button>
+          <button class="mbtn mbtn-success" onclick="confirmAccept()">
+            ✅ Confirm Accept
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script>
+      window.SIDEBAR_ACTIVE = "comparison";
+    </script>
+    <script src="../assets/js/sidebar-loader.js"></script>
+
+    <script>
+      if (!API.isLoggedIn()) location.href = "login.html";
+
+      const USER = API.getUser();
+      const ROLE = USER?.role || "procurement_officer";
+
+      if (ROLE === "vendor") {
+        location.href = "quotations.html";
+      }
+
+      const COLORS = [
+        "#4f8ef7",
+        "#10b981",
+        "#f59e0b",
+        "#7c3aed",
+        "#ef4444",
+        "#06b6d4",
+        "#f97316",
+      ];
+      function avatarColor(name) {
+        let h = 0;
+        for (let i = 0; i < (name || "").length; i++)
+          h = (h + name.charCodeAt(i)) % COLORS.length;
+        return COLORS[h];
+      }
+      function initials(name) {
+        return (name || "V")
+          .split(" ")
+          .map((w) => w[0])
+          .slice(0, 2)
+          .join("")
+          .toUpperCase();
+      }
+      function fmtAmount(a) {
+        if (!a && a !== 0) return "—";
+        return (
+          "₹" +
+          parseFloat(a).toLocaleString("en-IN", { minimumFractionDigits: 2 })
+        );
+      }
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      let allRFQs = [];
+      let currentRFQ = null;
+      let currentQuotes = [];
+      let pendingAcceptId = null;
+
+      function loadRFQs() {
+        API.get("/rfqs?status=open&status=closed&status=awarded")
+          .then((res) => {
+            allRFQs = (res.rfqs || []).filter((r) => r.status !== "draft");
+            populateRFQSelect();
+          })
+          .catch(() => {
+            allRFQs = getDemoRFQs();
+            populateRFQSelect();
+          });
+      }
+
+      function getDemoRFQs() {
+        return [
+          {
+            id: 1,
+            title: "Office Chairs Procurement",
+            category: "Office Supplies",
+            budget: 200000,
+            deadline: "2026-07-01",
+            status: "open",
+            created_by: 2,
+          },
+          {
+            id: 2,
+            title: "IT Infrastructure Upgrade",
+            category: "IT & Technology",
+            budget: 500000,
+            deadline: "2026-07-15",
+            status: "open",
+            created_by: 2,
+          },
+          {
+            id: 3,
+            title: "Annual Courier Contract",
+            category: "Logistics & Transport",
+            budget: 120000,
+            deadline: "2026-08-01",
+            status: "closed",
+            created_by: 2,
+          },
+        ];
+      }
+
+      function getDemoQuotes(rfqId) {
+        const base = { 1: 180000, 2: 460000, 3: 95000 }[rfqId] || 100000;
+        return [
+          {
+            id: rfqId * 10 + 1,
+            rfq_id: rfqId,
+            vendor_id: 5,
+            vendor_company: "Tech Horizon Pvt Ltd",
+            vendor_email: "hello@techhorizon.in",
+            amount: base,
+            notes: "Includes 2yr warranty, free installation",
+            attachments_url: null,
+            status: "submitted",
+            submitted_at: "2026-06-01T10:00:00",
+          },
+          {
+            id: rfqId * 10 + 2,
+            rfq_id: rfqId,
+            vendor_id: 6,
+            vendor_company: "Green Solutions Ltd",
+            vendor_email: "info@greensol.com",
+            amount: base * 0.93,
+            notes: "GST extra, 30-day delivery",
+            attachments_url: "https://example.com/quote.pdf",
+            status: "submitted",
+            submitted_at: "2026-06-02T14:30:00",
+          },
+          {
+            id: rfqId * 10 + 3,
+            rfq_id: rfqId,
+            vendor_id: 7,
+            vendor_company: "L&T Procurement",
+            vendor_email: "procure@lt.com",
+            amount: base * 1.08,
+            notes: "Premium tier, SLA included",
+            attachments_url: null,
+            status: "under_review",
+            submitted_at: "2026-06-03T09:15:00",
+          },
+        ];
+      }
+
+      function populateRFQSelect() {
+        const sel = document.getElementById("rfq-select");
+        allRFQs.forEach((r) => {
+          const o = document.createElement("option");
+          o.value = r.id;
+          o.textContent = `${r.title} (${r.status})`;
+          sel.appendChild(o);
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        const preId = params.get("rfq_id");
+        if (preId) {
+          sel.value = preId;
+          loadComparison();
+        }
+      }
+
+      function loadComparison() {
+        const rfqId = parseInt(document.getElementById("rfq-select").value);
+        if (!rfqId) return;
+
+        currentRFQ = allRFQs.find((r) => r.id === rfqId);
+        showRFQBanner(currentRFQ);
+
+        document.getElementById("comparison-area").innerHTML = `
+    <div class="skeleton" style="height:200px;margin-bottom:16px;"></div>
+    <div class="skeleton" style="height:160px;"></div>`;
+
+        API.get(`/quotations?rfq_id=${rfqId}`)
+          .then((res) => {
+            currentQuotes = res.quotations || [];
+            renderComparison(currentQuotes);
+          })
+          .catch(() => {
+            currentQuotes = getDemoQuotes(rfqId);
+            renderComparison(currentQuotes);
+          });
+      }
+
+      function showRFQBanner(rfq) {
+        if (!rfq) return;
+        document.getElementById("bi-title").textContent = rfq.title || "—";
+        document.getElementById("bi-category").textContent =
+          rfq.category || "—";
+        document.getElementById("bi-budget").textContent = fmtAmount(
+          rfq.budget
+        );
+        document.getElementById("bi-deadline").textContent = fmtDate(
+          rfq.deadline
+        );
+        document.getElementById("bi-status").textContent =
+          (rfq.status || "").charAt(0).toUpperCase() +
+          (rfq.status || "").slice(1);
+        document.getElementById("rfq-info-banner").style.display = "block";
+      }
+
+      function renderComparison(quotes) {
+        document.getElementById("bi-count").textContent = quotes.length;
+        document.getElementById("export-btn").style.display = quotes.length
+          ? "inline-flex"
+          : "none";
+
+        if (!quotes.length) {
+          document.getElementById("comparison-area").innerHTML = `
+      <div class="empty-state">
+        <div class="es-icon">📭</div>
+        <h3>No quotations yet</h3>
+        <p>No vendors have submitted quotes for this RFQ.</p>
+      </div>`;
+          return;
+        }
+
+        const sorted = [...quotes].sort(
+          (a, b) => parseFloat(a.amount) - parseFloat(b.amount)
+        );
+        const lowestAmt = parseFloat(sorted[0].amount);
+        const highestAmt = parseFloat(sorted[sorted.length - 1].amount);
+        const avgAmt =
+          quotes.reduce((s, q) => s + parseFloat(q.amount), 0) / quotes.length;
+        const saving = highestAmt - lowestAmt;
+        const savingPct =
+          highestAmt > 0 ? ((saving / highestAmt) * 100).toFixed(1) : 0;
+
+        const canAct = ROLE === "admin" || ROLE === "procurement_officer";
+
+        let html = `<div class="comparison-section">`;
+
+        html += `<div class="insight-cards">
+    <div class="insight-card">
+      <div class="insight-icon">🏆</div>
+      <div class="insight-val">${fmtAmount(lowestAmt)}</div>
+      <div class="insight-lbl">Lowest Quote</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-icon">📊</div>
+      <div class="insight-val">${fmtAmount(avgAmt)}</div>
+      <div class="insight-lbl">Average Quote</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-icon">💰</div>
+      <div class="insight-val">₹${saving.toLocaleString("en-IN", {
+        maximumFractionDigits: 0,
+      })}</div>
+      <div class="insight-lbl">Max Savings vs Highest</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-icon">📉</div>
+      <div class="insight-val">${savingPct}%</div>
+      <div class="insight-lbl">Price Spread</div>
+    </div>
+  </div>`;
+
+        html += `<div class="section-header">
+    <div><div class="section-title">Amount Comparison</div><div class="section-sub">Sorted lowest to highest</div></div>
+  </div>
+  <div class="bar-chart-wrap">`;
+
+        const barMax = highestAmt * 1.05;
+        sorted.forEach((q, i) => {
+          const pct = ((parseFloat(q.amount) / barMax) * 100).toFixed(1);
+          const color =
+            i === 0
+              ? "#10b981"
+              : i === sorted.length - 1
+              ? "#ef4444"
+              : COLORS[i % COLORS.length];
+          html += `<div class="bar-row">
+      <div class="bar-label">
+        <div class="bar-vendor">${q.vendor_company || "—"}</div>
+        <div class="bar-amount-label">${fmtAmount(q.amount)}</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${color};">
+          <span class="bar-fill-val">${pct}%</span>
+        </div>
+      </div>
+    </div>`;
+        });
+        html += `</div>`;
+
+        html += `<div class="section-header">
+    <div><div class="section-title">Detailed Comparison</div><div class="section-sub">${
+      quotes.length
+    } quotation(s) received</div></div>
+  </div>
+  <div class="compare-table-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Vendor</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Notes</th>
+          <th>Submitted</th>
+          <th>Attachment</th>
+          ${canAct ? "<th>Action</th>" : ""}
+        </tr>
+      </thead>
+      <tbody>`;
+
+        sorted.forEach((q, i) => {
+          const color = avatarColor(q.vendor_company);
+          const isLowest = parseFloat(q.amount) === lowestAmt;
+          const isHighest =
+            parseFloat(q.amount) === highestAmt && quotes.length > 1;
+          const amtClass = isLowest
+            ? "amount-lowest"
+            : isHighest
+            ? "amount-highest"
+            : "amount-mid";
+          const sc = `bs-${q.status}`;
+          const sl =
+            {
+              submitted: "Submitted",
+              under_review: "Under Review",
+              accepted: "Accepted",
+              rejected: "Rejected",
+            }[q.status] || q.status;
+
+          let actionCell = "";
+          if (canAct) {
+            if (q.status === "submitted" || q.status === "under_review") {
+              actionCell = `<td>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button style="padding:4px 10px;border-radius:7px;font-size:0.72rem;font-weight:600;border:none;cursor:pointer;background:rgba(16,185,129,0.12);color:#10b981;font-family:'DM Sans',sans-serif;" onclick="openAcceptModal(${
+              q.id
+            },'${(q.vendor_company || "").replace(/'/g, "\\'")}',${
+                q.amount
+              })">✅ Accept</button>
+            <button style="padding:4px 10px;border-radius:7px;font-size:0.72rem;font-weight:600;border:none;cursor:pointer;background:rgba(239,68,68,0.1);color:#ef4444;font-family:'DM Sans',sans-serif;" onclick="rejectQuote(${
+              q.id
+            })">❌ Reject</button>
+          </div>
+        </td>`;
+            } else {
+              actionCell = `<td><span style="font-size:0.78rem;color:var(--text-muted);">${sl}</span></td>`;
+            }
+          }
+
+          html += `<tr class="${
+            isLowest && quotes.length > 1 ? "winner-row" : ""
+          }">
+      <td>
+        <div class="vendor-cell">
+          <div class="vendor-avatar-sm" style="background:${color};">${initials(
+            q.vendor_company
+          )}</div>
+          <div>
+            <div class="vendor-name-sm">${q.vendor_company || "—"}</div>
+            <div class="vendor-email-sm">${q.vendor_email || ""}</div>
+          </div>
+          ${
+            isLowest && quotes.length > 1
+              ? `<span class="winner-badge">🏆 Best</span>`
+              : ""
+          }
+        </div>
+      </td>
+      <td><span class="amount-cell ${amtClass}">${fmtAmount(
+            q.amount
+          )}</span></td>
+      <td><span class="badge-status ${sc}">${sl}</span></td>
+      <td style="max-width:200px;font-size:0.8rem;color:var(--text-secondary);">${
+        q.notes || "—"
+      }</td>
+      <td style="font-size:0.8rem;white-space:nowrap;">${fmtDate(
+        q.submitted_at
+      )}</td>
+      <td>${
+        q.attachments_url
+          ? `<a href="${q.attachments_url}" target="_blank" style="color:var(--accent-primary);font-size:0.8rem;">📎 View</a>`
+          : `<span style="color:var(--text-muted);font-size:0.8rem;">—</span>`
+      }</td>
+      ${actionCell}
+    </tr>`;
+        });
+
+        html += `</tbody></table></div>`;
+
+        if (canAct && currentRFQ && currentRFQ.budget) {
+          const budgetNum = parseFloat(currentRFQ.budget);
+          const withinBudget = quotes.filter(
+            (q) => parseFloat(q.amount) <= budgetNum
+          );
+          html += `<div class="action-bar">
+      <div class="action-bar-label">💡 ${withinBudget.length} of ${
+            quotes.length
+          } quotes are within the ₹${budgetNum.toLocaleString(
+            "en-IN"
+          )} budget.</div>
+    </div>`;
+        }
+
+        html += `</div>`;
+        document.getElementById("comparison-area").innerHTML = html;
+
+        setTimeout(() => {
+          document.querySelectorAll(".bar-fill").forEach((b) => {
+            const w = b.style.width;
+            b.style.width = "0";
+            requestAnimationFrame(() => {
+              b.style.width = w;
+            });
+          });
+        }, 50);
+      }
+
+      function openAcceptModal(id, vendor, amount) {
+        pendingAcceptId = id;
+        document.getElementById("accept-vendor-name").textContent = vendor;
+        document.getElementById("accept-amount").textContent =
+          fmtAmount(amount);
+        document.getElementById("accept-modal").classList.add("show");
+      }
+
+      function confirmAccept() {
+        if (!pendingAcceptId) return;
+        API.patch(`/quotations/${pendingAcceptId}/status`, {
+          status: "accepted",
+        })
+          .then(() => {
+            const q = currentQuotes.find((x) => x.id === pendingAcceptId);
+            if (q) {
+              q.status = "accepted";
+              currentQuotes
+                .filter(
+                  (x) =>
+                    x.id !== pendingAcceptId &&
+                    (x.status === "submitted" || x.status === "under_review")
+                )
+                .forEach((x) => (x.status = "rejected"));
+              if (currentRFQ) currentRFQ.status = "awarded";
+            }
+            closeModal("accept-modal");
+            renderComparison(currentQuotes);
+            showRFQBanner(currentRFQ);
+            showToast(
+              "✅ Quotation accepted! RFQ marked as Awarded.",
+              "success"
+            );
+          })
+          .catch(() => {
+            const q = currentQuotes.find((x) => x.id === pendingAcceptId);
+            if (q) {
+              q.status = "accepted";
+              currentQuotes
+                .filter(
+                  (x) =>
+                    x.id !== pendingAcceptId &&
+                    (x.status === "submitted" || x.status === "under_review")
+                )
+                .forEach((x) => (x.status = "rejected"));
+              if (currentRFQ) currentRFQ.status = "awarded";
+            }
+            closeModal("accept-modal");
+            renderComparison(currentQuotes);
+            showToast("✅ Accepted (demo)", "success");
+          });
+      }
+
+      function rejectQuote(id) {
+        API.patch(`/quotations/${id}/status`, { status: "rejected" })
+          .then(() => {
+            const q = currentQuotes.find((x) => x.id === id);
+            if (q) q.status = "rejected";
+            renderComparison(currentQuotes);
+            showToast("❌ Quotation rejected", "warning");
+          })
+          .catch(() => {
+            const q = currentQuotes.find((x) => x.id === id);
+            if (q) q.status = "rejected";
+            renderComparison(currentQuotes);
+            showToast("Rejected (demo)", "info");
+          });
+      }
+
+      document.getElementById("export-btn").addEventListener("click", () => {
+        if (!currentQuotes.length) return;
+        const rows = [
+          ["Vendor", "Email", "Amount", "Status", "Notes", "Submitted"],
+        ];
+        currentQuotes.forEach((q) => {
+          rows.push([
+            q.vendor_company || "",
+            q.vendor_email || "",
+            q.amount,
+            q.status,
+            (q.notes || "").replace(/,/g, ";"),
+            fmtDate(q.submitted_at),
+          ]);
+        });
+        const csv = rows
+          .map((r) => r.map((c) => `"${c}"`).join(","))
+          .join("\n");
+        const blob = new Blob([csv], { type: "text/csv" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `quotations-rfq-${currentRFQ?.id || "export"}.csv`;
+        a.click();
+      });
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+      }
+      document.querySelectorAll(".modal-backdrop").forEach((m) => {
+        m.addEventListener("click", (e) => {
+          if (e.target === m) m.classList.remove("show");
+        });
+      });
+
+      function showToast(msg, type = "info") {
+        const c = {
+          success: "#10b981",
+          warning: "#f59e0b",
+          info: "#4f8ef7",
+          error: "#ef4444",
+        };
+        const t = document.createElement("div");
+        t.style.cssText = `position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:10px 18px;border-radius:10px;font-size:0.83rem;font-weight:600;background:${c[type]};color:#fff;box-shadow:0 8px 24px rgba(0,0,0,0.3);animation:slideUp 0.2s ease;`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+      }
+
+      document
+        .getElementById("mobile-menu-btn")
+        .addEventListener("click", () => {
+          document.getElementById("sidebar")?.classList.toggle("open");
+          document.getElementById("sidebar-overlay")?.classList.toggle("show");
+        });
+
+      loadRFQs();
+    </script>
+  </body>
+</html>

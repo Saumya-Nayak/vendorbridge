@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quotations — VendorBridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <style>
+      :root {
+        --transition-fast: 0.18s ease;
+      }
+      .page-wrapper {
+        display: flex;
+        min-height: 100vh;
+        background: var(--bg-primary);
+        font-family: "DM Sans", sans-serif;
+      }
+      .main-content {
+        margin-left: 240px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        height: 64px;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        backdrop-filter: blur(8px);
+        flex-shrink: 0;
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .topbar-left h1 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+      }
+      .topbar-left p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        padding: 4px;
+      }
+      .page-body {
+        padding: 24px;
+        flex: 1;
+      }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        animation: fadeUp 0.4s ease both;
+      }
+      .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+        max-width: 360px;
+      }
+      .search-wrap input {
+        width: 100%;
+        padding: 9px 14px 9px 36px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        transition: border-color var(--transition-fast);
+      }
+      .search-wrap input:focus {
+        border-color: var(--accent-primary);
+      }
+      .search-wrap input::placeholder {
+        color: var(--text-muted);
+      }
+      .search-icon {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
+      .filter-select {
+        padding: 9px 14px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        cursor: pointer;
+        transition: border-color var(--transition-fast);
+      }
+      .filter-select:focus {
+        border-color: var(--accent-primary);
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: var(--accent-primary);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: opacity var(--transition-fast),
+          transform var(--transition-fast);
+      }
+      .btn-primary:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-bottom: 20px;
+        animation: fadeUp 0.4s 0.05s ease both;
+      }
+      .stat-chip {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .stat-chip-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+      }
+      .stat-chip-val {
+        font-family: "Syne", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+      .stat-chip-lbl {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .quotes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 16px;
+        animation: fadeUp 0.4s 0.1s ease both;
+      }
+      .quote-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform var(--transition-fast),
+          box-shadow var(--transition-fast), border-color var(--transition-fast);
+      }
+      .quote-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--border-accent);
+      }
+      .quote-card-header {
+        padding: 16px 20px 12px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .qc-rfq-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 3px;
+      }
+      .qc-vendor {
+        font-size: 0.76rem;
+        color: var(--text-muted);
+      }
+      .quote-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .quote-status::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .qs-submitted {
+        background: rgba(79, 142, 247, 0.1);
+        color: #4f8ef7;
+      }
+      .qs-under_review {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+      }
+      .qs-accepted {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .qs-rejected {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .quote-card-body {
+        padding: 0 20px 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .qc-field-lbl {
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .qc-field-val {
+        font-size: 0.83rem;
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-top: 2px;
+      }
+      .qc-amount {
+        font-family: "Syne", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .quote-card-footer {
+        padding: 12px 20px;
+        border-top: 1px solid var(--border-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .card-actions {
+        display: flex;
+        gap: 6px;
+      }
+      .card-btn {
+        padding: 5px 12px;
+        border-radius: 7px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: opacity var(--transition-fast);
+        font-family: "DM Sans", sans-serif;
+      }
+      .card-btn:hover {
+        opacity: 0.75;
+      }
+      .cb-view {
+        background: var(--accent-primary-light);
+        color: var(--accent-primary);
+      }
+      .cb-review {
+        background: rgba(245, 158, 11, 0.12);
+        color: #f59e0b;
+      }
+      .cb-accept {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+      }
+      .cb-reject {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .cb-withdraw {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .cb-edit {
+        background: rgba(79, 142, 247, 0.1);
+        color: #4f8ef7;
+      }
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+        gap: 10px;
+      }
+      .empty-state .es-icon {
+        font-size: 3rem;
+        opacity: 0.35;
+      }
+      .empty-state p {
+        font-size: 0.85rem;
+        text-align: center;
+      }
+      .skeleton-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 14px;
+        padding: 20px;
+        height: 180px;
+        animation: shimmer 1.4s infinite;
+      }
+      @keyframes shimmer {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      .modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        background: rgba(0, 0, 0, 0.65);
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-backdrop.show {
+        display: flex;
+      }
+      .modal-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 540px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-xl);
+        animation: slideUp 0.25s ease;
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        background: var(--bg-card);
+        z-index: 1;
+      }
+      .modal-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .modal-close {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: var(--bg-tertiary);
+        border-radius: 7px;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background var(--transition-fast);
+      }
+      .modal-close:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .modal-body {
+        padding: 24px;
+      }
+      .modal-input {
+        width: 100%;
+        padding: 9px 12px;
+        margin-top: 4px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: 9px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.18s;
+      }
+      .modal-input:focus {
+        border-color: var(--accent-primary);
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 16px 24px;
+        border-top: 1px solid var(--border-primary);
+      }
+      .mbtn {
+        padding: 9px 20px;
+        border-radius: 9px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: opacity 0.15s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .mbtn:hover {
+        opacity: 0.85;
+      }
+      .mbtn-primary {
+        background: var(--accent-primary);
+        color: #fff;
+      }
+      .mbtn-success {
+        background: #10b981;
+        color: #fff;
+      }
+      .mbtn-warning {
+        background: #f59e0b;
+        color: #fff;
+      }
+      .mbtn-danger {
+        background: #ef4444;
+        color: #fff;
+      }
+      .mbtn-ghost {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-primary);
+      }
+      .detail-section {
+        margin-bottom: 20px;
+      }
+      .detail-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--border-secondary);
+      }
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .detail-field-lbl {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+      }
+      .detail-field-val {
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-top: 2px;
+      }
+      .rfq-select-list {
+        max-height: 220px;
+        overflow-y: auto;
+        display: grid;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .rfq-option {
+        padding: 10px 14px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: 9px;
+        cursor: pointer;
+        transition: border-color 0.15s;
+      }
+      .rfq-option:hover,
+      .rfq-option.selected {
+        border-color: var(--accent-primary);
+        background: var(--accent-primary-light);
+      }
+      .rfq-option-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .rfq-option-meta {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 24px;
+        padding-bottom: 8px;
+      }
+      .pg-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 1px solid var(--border-primary);
+        background: var(--bg-card);
+        color: var(--text-secondary);
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--transition-fast);
+      }
+      .pg-btn:hover,
+      .pg-btn.active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: #fff;
+      }
+      .pg-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .badge-amount {
+        font-family: "Syne", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (max-width: 1300px) {
+        .stats-row {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .main-content {
+          margin-left: 0;
+        }
+        .mobile-menu-btn {
+          display: flex;
+          align-items: center;
+        }
+        .page-body {
+          padding: 16px;
+        }
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+        .quotes-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div id="sidebar-root"></div>
+      <div class="main-content">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            <div>
+              <h1>Quotations</h1>
+              <p id="topbar-sub">Manage quotations</p>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <button
+              class="btn-primary"
+              id="submit-quote-btn"
+              style="display: none"
+            >
+              ➕ Submit Quote
+            </button>
+          </div>
+        </header>
+
+        <div class="page-body">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search by RFQ title, vendor…"
+              />
+            </div>
+            <select class="filter-select" id="status-filter">
+              <option value="">All Statuses</option>
+              <option value="submitted">Submitted</option>
+              <option value="under_review">Under Review</option>
+              <option value="accepted">Accepted</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <select class="filter-select" id="rfq-filter">
+              <option value="">All RFQs</option>
+            </select>
+          </div>
+
+          <div class="stats-row" id="stats-row">
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(79, 142, 247, 0.12)"
+              >
+                📋
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-total">—</div>
+                <div class="stat-chip-lbl">Total Quotes</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(79, 142, 247, 0.12)"
+              >
+                📤
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-submitted">—</div>
+                <div class="stat-chip-lbl">Submitted</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(245, 158, 11, 0.12)"
+              >
+                🔍
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-review">—</div>
+                <div class="stat-chip-lbl">Under Review</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(16, 185, 129, 0.12)"
+              >
+                ✅
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-accepted">—</div>
+                <div class="stat-chip-lbl">Accepted</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(239, 68, 68, 0.12)"
+              >
+                ❌
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-rejected">—</div>
+                <div class="stat-chip-lbl">Rejected</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="quotes-grid" id="quotes-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal-backdrop" id="detail-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">Quotation Details</span>
+          <button class="modal-close" onclick="closeModal('detail-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body" id="detail-modal-body">Loading…</div>
+        <div class="modal-actions" id="detail-modal-actions"></div>
+      </div>
+    </div>
+
+    <!-- SUBMIT QUOTE MODAL (vendor) -->
+    <div class="modal-backdrop" id="submit-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">Submit Quotation</span>
+          <button class="modal-close" onclick="closeModal('submit-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div style="display: grid; gap: 14px">
+            <div>
+              <div
+                class="detail-field-lbl"
+                style="
+                  margin-bottom: 6px;
+                  font-size: 0.72rem;
+                  color: var(--text-muted);
+                "
+              >
+                Select RFQ *
+              </div>
+              <div class="rfq-select-list" id="rfq-select-list">
+                <div style="color: var(--text-muted); font-size: 0.82rem">
+                  Loading open RFQs…
+                </div>
+              </div>
+              <input type="hidden" id="sq-rfq-id" />
+            </div>
+            <div>
+              <label class="detail-field-lbl">Quote Amount (₹) *</label>
+              <input
+                class="modal-input"
+                id="sq-amount"
+                type="number"
+                min="1"
+                placeholder="e.g. 50000"
+              />
+            </div>
+            <div>
+              <label class="detail-field-lbl">Notes / Remarks</label>
+              <textarea
+                class="modal-input"
+                id="sq-notes"
+                rows="3"
+                placeholder="Terms, delivery info, etc."
+              ></textarea>
+            </div>
+            <div>
+              <label class="detail-field-lbl">Attachment URL (optional)</label>
+              <input
+                class="modal-input"
+                id="sq-attachment"
+                placeholder="https://…"
+              />
+            </div>
+            <div
+              id="sq-error"
+              style="color: #ef4444; font-size: 0.82rem; display: none"
+            ></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="mbtn mbtn-ghost" onclick="closeModal('submit-modal')">
+            Cancel
+          </button>
+          <button class="mbtn mbtn-primary" onclick="doSubmitQuote()">
+            Submit Quotation
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT MODAL (vendor editing own submitted quote) -->
+    <div class="modal-backdrop" id="edit-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">Edit Quotation</span>
+          <button class="modal-close" onclick="closeModal('edit-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div style="display: grid; gap: 14px">
+            <input type="hidden" id="eq-id" />
+            <div>
+              <label class="detail-field-lbl">Quote Amount (₹) *</label>
+              <input class="modal-input" id="eq-amount" type="number" min="1" />
+            </div>
+            <div>
+              <label class="detail-field-lbl">Notes / Remarks</label>
+              <textarea class="modal-input" id="eq-notes" rows="3"></textarea>
+            </div>
+            <div>
+              <label class="detail-field-lbl">Attachment URL</label>
+              <input class="modal-input" id="eq-attachment" />
+            </div>
+            <div
+              id="eq-error"
+              style="color: #ef4444; font-size: 0.82rem; display: none"
+            ></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="mbtn mbtn-ghost" onclick="closeModal('edit-modal')">
+            Cancel
+          </button>
+          <button class="mbtn mbtn-primary" onclick="doEditQuote()">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script>
+      window.SIDEBAR_ACTIVE = "quotations";
+    </script>
+    <script src="../assets/js/sidebar-loader.js"></script>
+
+    <script>
+      if (!API.isLoggedIn()) location.href = "login.html";
+
+      const USER = API.getUser();
+      const ROLE = USER?.role || "procurement_officer";
+
+      if (ROLE === "vendor") {
+        document.getElementById("submit-quote-btn").style.display =
+          "inline-flex";
+        document.getElementById("topbar-sub").textContent =
+          "View & submit your quotations";
+      } else if (ROLE === "procurement_officer") {
+        document.getElementById("topbar-sub").textContent =
+          "Review quotes on your RFQs";
+      } else if (ROLE === "manager") {
+        document.getElementById("topbar-sub").textContent =
+          "Monitor all quotations";
+      } else if (ROLE === "admin") {
+        document.getElementById("topbar-sub").textContent =
+          "Admin: full quotation management";
+      }
+
+      let allQuotes = [];
+      let filtered = [];
+      let currentPage = 1;
+      const PAGE_SIZE = 9;
+
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+      function fmtAmount(a) {
+        if (!a && a !== 0) return "—";
+        return (
+          "₹" +
+          parseFloat(a).toLocaleString("en-IN", { minimumFractionDigits: 2 })
+        );
+      }
+      function statusClass(s) {
+        return (
+          {
+            submitted: "qs-submitted",
+            under_review: "qs-under_review",
+            accepted: "qs-accepted",
+            rejected: "qs-rejected",
+          }[s] || "qs-submitted"
+        );
+      }
+      function statusLabel(s) {
+        return (
+          {
+            submitted: "Submitted",
+            under_review: "Under Review",
+            accepted: "Accepted",
+            rejected: "Rejected",
+          }[s] || s
+        );
+      }
+
+      function loadQuotes() {
+        API.get("/quotations")
+          .then((res) => {
+            allQuotes = res.quotations || [];
+            populateRFQFilter();
+            applyFilters();
+            loadStats();
+          })
+          .catch(() => {
+            allQuotes = getDemoQuotes();
+            populateRFQFilter();
+            applyFilters();
+            loadStats();
+          });
+      }
+
+      function getDemoQuotes() {
+        const demos = [];
+        const rfqs = [
+          { id: 1, title: "Office Chairs Procurement" },
+          { id: 2, title: "IT Infrastructure Upgrade" },
+          { id: 3, title: "Annual Courier Contract" },
+        ];
+        const vendors = [
+          {
+            id: 5,
+            company: "Tech Horizon Pvt Ltd",
+            email: "hello@techhorizon.in",
+          },
+          { id: 6, company: "Green Solutions Ltd", email: "info@greensol.com" },
+          { id: 7, company: "L&T Procurement", email: "procure@lt.com" },
+        ];
+        const statuses = ["submitted", "under_review", "accepted", "rejected"];
+        let id = 1;
+        rfqs.forEach((r) => {
+          vendors.forEach((v, vi) => {
+            demos.push({
+              id: id++,
+              rfq_id: r.id,
+              rfq_title: r.title,
+              vendor_id: v.id,
+              vendor_company: v.company,
+              vendor_email: v.email,
+              amount: 45000 + vi * 12000 + r.id * 5000,
+              notes:
+                vi === 0
+                  ? "Includes 2yr warranty"
+                  : vi === 1
+                  ? "GST extra"
+                  : null,
+              attachments_url: null,
+              status: statuses[(vi + r.id) % 4],
+              submitted_at: new Date(Date.now() - id * 86400000).toISOString(),
+              updated_at: new Date(Date.now() - id * 43200000).toISOString(),
+            });
+          });
+        });
+        if (ROLE === "vendor") return demos.filter((q) => q.vendor_id === 5);
+        return demos;
+      }
+
+      function populateRFQFilter() {
+        const titles = [
+          ...new Set(allQuotes.map((q) => q.rfq_title).filter(Boolean)),
+        ].sort();
+        const sel = document.getElementById("rfq-filter");
+        titles.forEach((t) => {
+          const o = document.createElement("option");
+          o.value = t;
+          o.textContent = t;
+          sel.appendChild(o);
+        });
+      }
+
+      function applyFilters() {
+        const q = document.getElementById("search-input").value.toLowerCase();
+        const st = document.getElementById("status-filter").value;
+        const rfq = document.getElementById("rfq-filter").value;
+
+        filtered = allQuotes.filter((item) => {
+          const matchQ =
+            !q ||
+            (item.rfq_title || "").toLowerCase().includes(q) ||
+            (item.vendor_company || "").toLowerCase().includes(q);
+          const matchSt = !st || item.status === st;
+          const matchR = !rfq || item.rfq_title === rfq;
+          return matchQ && matchSt && matchR;
+        });
+        currentPage = 1;
+        renderPage();
+      }
+
+      function renderPage() {
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const slice = filtered.slice(start, start + PAGE_SIZE);
+        const grid = document.getElementById("quotes-grid");
+
+        if (!filtered.length) {
+          grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="es-icon">📋</div><p>No quotations match your filters.</p></div>`;
+          document.getElementById("pagination").innerHTML = "";
+          return;
+        }
+
+        grid.innerHTML = slice.map(quoteCard).join("");
+        renderPagination();
+      }
+
+      function quoteCard(q) {
+        const sc = statusClass(q.status);
+        const sl = statusLabel(q.status);
+
+        let actionBtns = `<button class="card-btn cb-view" onclick="openDetail(${q.id})">View</button>`;
+
+        if (ROLE === "vendor" && q.status === "submitted") {
+          actionBtns += `<button class="card-btn cb-edit" onclick="openEdit(${q.id})">Edit</button>`;
+          actionBtns += `<button class="card-btn cb-withdraw" onclick="withdrawQuote(${q.id})">Withdraw</button>`;
+        }
+        if (
+          (ROLE === "procurement_officer" || ROLE === "admin") &&
+          q.status === "submitted"
+        ) {
+          actionBtns += `<button class="card-btn cb-review" onclick="changeStatus(${q.id},'under_review')">Review</button>`;
+        }
+        if (
+          (ROLE === "procurement_officer" || ROLE === "admin") &&
+          q.status === "under_review"
+        ) {
+          actionBtns += `<button class="card-btn cb-accept" onclick="changeStatus(${q.id},'accepted')">Accept</button>`;
+          actionBtns += `<button class="card-btn cb-reject" onclick="changeStatus(${q.id},'rejected')">Reject</button>`;
+        }
+
+        return `
+  <div class="quote-card" id="qc-${q.id}">
+    <div class="quote-card-header">
+      <div>
+        <div class="qc-rfq-title">${q.rfq_title || "—"}</div>
+        <div class="qc-vendor">${
+          ROLE !== "vendor" ? q.vendor_company || "—" : "My Quotation"
+        }</div>
+      </div>
+      <span class="quote-status ${sc}">${sl}</span>
+    </div>
+    <div class="quote-card-body">
+      <div>
+        <div class="qc-field-lbl">Amount</div>
+        <div class="qc-amount">${fmtAmount(q.amount)}</div>
+      </div>
+      <div>
+        <div class="qc-field-lbl">Submitted</div>
+        <div class="qc-field-val">${fmtDate(q.submitted_at)}</div>
+      </div>
+      <div style="grid-column:1/-1;">
+        <div class="qc-field-lbl">Notes</div>
+        <div class="qc-field-val" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${
+          q.notes || "—"
+        }</div>
+      </div>
+    </div>
+    <div class="quote-card-footer">
+      <span style="font-size:0.72rem;color:var(--text-muted);">${
+        q.attachments_url ? "📎 Attachment" : ""
+      }</span>
+      <div class="card-actions">${actionBtns}</div>
+    </div>
+  </div>`;
+      }
+
+      function renderPagination() {
+        const total = Math.ceil(filtered.length / PAGE_SIZE);
+        const pg = document.getElementById("pagination");
+        if (total <= 1) {
+          pg.innerHTML = "";
+          return;
+        }
+        let html = `<button class="pg-btn" ${
+          currentPage === 1 ? "disabled" : ""
+        } onclick="goPage(${currentPage - 1})">‹</button>`;
+        for (let i = 1; i <= total; i++) {
+          html += `<button class="pg-btn ${
+            i === currentPage ? "active" : ""
+          }" onclick="goPage(${i})">${i}</button>`;
+        }
+        html += `<button class="pg-btn" ${
+          currentPage === total ? "disabled" : ""
+        } onclick="goPage(${currentPage + 1})">›</button>`;
+        pg.innerHTML = html;
+      }
+      function goPage(p) {
+        currentPage = p;
+        renderPage();
+        window.scrollTo(0, 0);
+      }
+
+      function loadStats() {
+        API.get("/quotations/stats")
+          .then((s) => {
+            document.getElementById("stat-total").textContent =
+              s.total ?? allQuotes.length;
+            document.getElementById("stat-submitted").textContent =
+              s.submitted ??
+              allQuotes.filter((q) => q.status === "submitted").length;
+            document.getElementById("stat-review").textContent =
+              s.under_review ??
+              allQuotes.filter((q) => q.status === "under_review").length;
+            document.getElementById("stat-accepted").textContent =
+              s.accepted ??
+              allQuotes.filter((q) => q.status === "accepted").length;
+            document.getElementById("stat-rejected").textContent =
+              s.rejected ??
+              allQuotes.filter((q) => q.status === "rejected").length;
+          })
+          .catch(() => {
+            document.getElementById("stat-total").textContent =
+              allQuotes.length;
+            document.getElementById("stat-submitted").textContent =
+              allQuotes.filter((q) => q.status === "submitted").length;
+            document.getElementById("stat-review").textContent =
+              allQuotes.filter((q) => q.status === "under_review").length;
+            document.getElementById("stat-accepted").textContent =
+              allQuotes.filter((q) => q.status === "accepted").length;
+            document.getElementById("stat-rejected").textContent =
+              allQuotes.filter((q) => q.status === "rejected").length;
+          });
+      }
+
+      function openDetail(id) {
+        const q = allQuotes.find((x) => x.id === id);
+        if (!q) return;
+        const sc = statusClass(q.status);
+        const sl = statusLabel(q.status);
+
+        document.getElementById("detail-modal-body").innerHTML = `
+  <div class="detail-section">
+    <div class="detail-section-title">RFQ Reference</div>
+    <div class="detail-grid">
+      <div style="grid-column:1/-1;"><div class="detail-field-lbl">RFQ Title</div><div class="detail-field-val" style="font-size:0.95rem;font-weight:700;">${
+        q.rfq_title || "—"
+      }</div></div>
+    </div>
+  </div>
+  <div class="detail-section">
+    <div class="detail-section-title">Vendor & Quote</div>
+    <div class="detail-grid">
+      <div><div class="detail-field-lbl">Vendor</div><div class="detail-field-val">${
+        q.vendor_company || "—"
+      }</div></div>
+      <div><div class="detail-field-lbl">Email</div><div class="detail-field-val" style="font-size:0.78rem;">${
+        q.vendor_email || "—"
+      }</div></div>
+      <div><div class="detail-field-lbl">Amount</div><div class="detail-field-val" style="font-family:'Syne',sans-serif;font-size:1.15rem;">${fmtAmount(
+        q.amount
+      )}</div></div>
+      <div><div class="detail-field-lbl">Status</div><div class="detail-field-val"><span class="quote-status ${sc}">${sl}</span></div></div>
+      <div><div class="detail-field-lbl">Submitted</div><div class="detail-field-val">${fmtDate(
+        q.submitted_at
+      )}</div></div>
+      <div><div class="detail-field-lbl">Last Updated</div><div class="detail-field-val">${fmtDate(
+        q.updated_at
+      )}</div></div>
+    </div>
+  </div>
+  ${
+    q.notes
+      ? `<div class="detail-section"><div class="detail-section-title">Notes</div><div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">${q.notes}</div></div>`
+      : ""
+  }
+  ${
+    q.attachments_url
+      ? `<div class="detail-section"><div class="detail-section-title">Attachment</div><a href="${q.attachments_url}" target="_blank" style="color:var(--accent-primary);font-size:0.85rem;">📎 View Attachment</a></div>`
+      : ""
+  }`;
+
+        let acts = `<button class="mbtn mbtn-ghost" onclick="closeModal('detail-modal')">Close</button>`;
+        if (ROLE === "vendor" && q.status === "submitted") {
+          acts += `<button class="mbtn mbtn-primary" onclick="openEdit(${q.id});closeModal('detail-modal')">✏️ Edit</button>`;
+          acts += `<button class="mbtn mbtn-danger" onclick="withdrawQuote(${q.id});closeModal('detail-modal')">🚫 Withdraw</button>`;
+        }
+        if (
+          (ROLE === "procurement_officer" || ROLE === "admin") &&
+          q.status === "submitted"
+        ) {
+          acts += `<button class="mbtn mbtn-warning" onclick="changeStatus(${q.id},'under_review');closeModal('detail-modal')">🔍 Mark Review</button>`;
+        }
+        if (
+          (ROLE === "procurement_officer" || ROLE === "admin") &&
+          q.status === "under_review"
+        ) {
+          acts += `<button class="mbtn mbtn-success" onclick="changeStatus(${q.id},'accepted');closeModal('detail-modal')">✅ Accept</button>`;
+          acts += `<button class="mbtn mbtn-danger"  onclick="changeStatus(${q.id},'rejected');closeModal('detail-modal')">❌ Reject</button>`;
+        }
+        document.getElementById("detail-modal-actions").innerHTML = acts;
+        document.getElementById("detail-modal").classList.add("show");
+      }
+
+      function changeStatus(id, newStatus) {
+        API.patch(`/quotations/${id}/status`, { status: newStatus })
+          .then(() => {
+            const q = allQuotes.find((x) => x.id === id);
+            if (q) q.status = newStatus;
+            applyFilters();
+            loadStats();
+            showToast(
+              {
+                accepted: "✅ Quotation accepted!",
+                rejected: "❌ Quotation rejected",
+                under_review: "🔍 Moved to review",
+              }[newStatus] || "Status updated",
+              {
+                accepted: "success",
+                rejected: "error",
+                under_review: "warning",
+              }[newStatus] || "info"
+            );
+          })
+          .catch(() => {
+            const q = allQuotes.find((x) => x.id === id);
+            if (q) q.status = newStatus;
+            applyFilters();
+            loadStats();
+            showToast("Status updated (demo)", "info");
+          });
+      }
+
+      function withdrawQuote(id) {
+        if (!confirm("Withdraw this quotation?")) return;
+        API.delete(`/quotations/${id}`)
+          .then(() => {
+            allQuotes = allQuotes.filter((x) => x.id !== id);
+            applyFilters();
+            loadStats();
+            showToast("Quotation withdrawn", "warning");
+          })
+          .catch(() => {
+            allQuotes = allQuotes.filter((x) => x.id !== id);
+            applyFilters();
+            loadStats();
+            showToast("Withdrawn (demo)", "info");
+          });
+      }
+
+      function openEdit(id) {
+        const q = allQuotes.find((x) => x.id === id);
+        if (!q) return;
+        document.getElementById("eq-id").value = q.id;
+        document.getElementById("eq-amount").value = q.amount;
+        document.getElementById("eq-notes").value = q.notes || "";
+        document.getElementById("eq-attachment").value =
+          q.attachments_url || "";
+        document.getElementById("eq-error").style.display = "none";
+        document.getElementById("edit-modal").classList.add("show");
+      }
+
+      function doEditQuote() {
+        const id = parseInt(document.getElementById("eq-id").value);
+        const err = document.getElementById("eq-error");
+        const data = {
+          amount: parseFloat(document.getElementById("eq-amount").value),
+          notes: document.getElementById("eq-notes").value.trim(),
+          attachments_url: document
+            .getElementById("eq-attachment")
+            .value.trim(),
+        };
+        if (!data.amount || data.amount <= 0) {
+          err.textContent = "Enter a valid amount.";
+          err.style.display = "block";
+          return;
+        }
+        err.style.display = "none";
+
+        API.put(`/quotations/${id}`, data)
+          .then((res) => {
+            const idx = allQuotes.findIndex((x) => x.id === id);
+            if (idx !== -1) Object.assign(allQuotes[idx], data);
+            closeModal("edit-modal");
+            applyFilters();
+            showToast("✅ Quotation updated!", "success");
+          })
+          .catch((e) => {
+            err.textContent = e.message || "Update failed.";
+            err.style.display = "block";
+          });
+      }
+
+      let openRFQs = [];
+      document
+        .getElementById("submit-quote-btn")
+        ?.addEventListener("click", () => {
+          document.getElementById("sq-rfq-id").value = "";
+          document.getElementById("sq-amount").value = "";
+          document.getElementById("sq-notes").value = "";
+          document.getElementById("sq-attachment").value = "";
+          document.getElementById("sq-error").style.display = "none";
+
+          API.get("/rfqs?status=open")
+            .then((res) => {
+              openRFQs = res.rfqs || [];
+              renderRFQOptions(openRFQs);
+            })
+            .catch(() => {
+              openRFQs = [
+                {
+                  id: 1,
+                  title: "Office Chairs Procurement",
+                  deadline: "2026-07-01",
+                  budget: 200000,
+                },
+                {
+                  id: 2,
+                  title: "IT Infrastructure Upgrade",
+                  deadline: "2026-07-15",
+                  budget: 500000,
+                },
+                {
+                  id: 3,
+                  title: "Annual Courier Contract",
+                  deadline: "2026-08-01",
+                  budget: 120000,
+                },
+              ];
+              renderRFQOptions(openRFQs);
+            });
+
+          document.getElementById("submit-modal").classList.add("show");
+        });
+
+      function renderRFQOptions(rfqs) {
+        const list = document.getElementById("rfq-select-list");
+        if (!rfqs.length) {
+          list.innerHTML = `<div style="color:var(--text-muted);font-size:0.82rem;">No open RFQs available.</div>`;
+          return;
+        }
+        list.innerHTML = rfqs
+          .map(
+            (r) => `
+    <div class="rfq-option" data-id="${r.id}" onclick="selectRFQ(${
+              r.id
+            }, this)">
+      <div class="rfq-option-title">${r.title}</div>
+      <div class="rfq-option-meta">Deadline: ${fmtDate(
+        r.deadline
+      )} · Budget: ${fmtAmount(r.budget)}</div>
+    </div>`
+          )
+          .join("");
+      }
+
+      function selectRFQ(id, el) {
+        document
+          .querySelectorAll(".rfq-option")
+          .forEach((o) => o.classList.remove("selected"));
+        el.classList.add("selected");
+        document.getElementById("sq-rfq-id").value = id;
+      }
+
+      function doSubmitQuote() {
+        const err = document.getElementById("sq-error");
+        const rfq_id = parseInt(document.getElementById("sq-rfq-id").value);
+        const amount = parseFloat(document.getElementById("sq-amount").value);
+        if (!rfq_id) {
+          err.textContent = "Please select an RFQ.";
+          err.style.display = "block";
+          return;
+        }
+        if (!amount || amount <= 0) {
+          err.textContent = "Enter a valid amount.";
+          err.style.display = "block";
+          return;
+        }
+        err.style.display = "none";
+
+        const data = {
+          rfq_id,
+          amount,
+          notes: document.getElementById("sq-notes").value.trim() || null,
+          attachments_url:
+            document.getElementById("sq-attachment").value.trim() || null,
+        };
+
+        API.post("/quotations", data)
+          .then((res) => {
+            allQuotes.unshift(
+              res.quotation || {
+                ...data,
+                id: Date.now(),
+                status: "submitted",
+                submitted_at: new Date().toISOString(),
+                rfq_title:
+                  openRFQs.find((r) => r.id === rfq_id)?.title || "RFQ",
+                vendor_company: "You",
+                vendor_email: USER?.email || "",
+              }
+            );
+            closeModal("submit-modal");
+            applyFilters();
+            loadStats();
+            showToast("✅ Quotation submitted!", "success");
+          })
+          .catch((e) => {
+            err.textContent = e.message || "Submission failed.";
+            err.style.display = "block";
+          });
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+      }
+      document.querySelectorAll(".modal-backdrop").forEach((m) => {
+        m.addEventListener("click", (e) => {
+          if (e.target === m) m.classList.remove("show");
+        });
+      });
+
+      function showToast(msg, type = "info") {
+        const c = {
+          success: "#10b981",
+          warning: "#f59e0b",
+          info: "#4f8ef7",
+          error: "#ef4444",
+        };
+        const t = document.createElement("div");
+        t.style.cssText = `position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:10px 18px;border-radius:10px;font-size:0.83rem;font-weight:600;background:${c[type]};color:#fff;box-shadow:0 8px 24px rgba(0,0,0,0.3);animation:slideUp 0.2s ease;`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+      }
+
+      document
+        .getElementById("search-input")
+        .addEventListener("input", applyFilters);
+      document
+        .getElementById("status-filter")
+        .addEventListener("change", applyFilters);
+      document
+        .getElementById("rfq-filter")
+        .addEventListener("change", applyFilters);
+      document
+        .getElementById("mobile-menu-btn")
+        .addEventListener("click", () => {
+          document.getElementById("sidebar")?.classList.toggle("open");
+          document.getElementById("sidebar-overlay")?.classList.toggle("show");
+        });
+
+      loadQuotes();
+    </script>
+  </body>
+</html>

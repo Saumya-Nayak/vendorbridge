@@ -7,7 +7,12 @@ const API = (() => {
   const BASE_URL = "http://localhost:5000/api";
 
   function getToken() {
-    return localStorage.getItem("vb_token");
+    // Support both token key names
+    return (
+      localStorage.getItem("vb_access_token") ||
+      localStorage.getItem("vb_token") ||
+      null
+    );
   }
 
   function getHeaders(isFormData = false) {
@@ -41,8 +46,10 @@ const API = (() => {
 
       return json;
     } catch (err) {
-      if (err.status === 401) {
-        // Token expired - redirect to login
+      // Only redirect on 401 for protected routes, NOT for auth endpoints
+      const isAuthEndpoint = endpoint.startsWith("/auth/");
+      if (err.status === 401 && !isAuthEndpoint) {
+        localStorage.removeItem("vb_access_token");
         localStorage.removeItem("vb_token");
         localStorage.removeItem("vb_user");
         window.location.href = "/frontend/pages/login.html";
@@ -59,7 +66,6 @@ const API = (() => {
     delete: (endpoint) => request("DELETE", endpoint),
     upload: (endpoint, formData) => request("POST", endpoint, formData, true),
 
-    // Auth helpers
     getToken,
     getUser: () => {
       const u = localStorage.getItem("vb_user");
@@ -67,9 +73,13 @@ const API = (() => {
     },
     isLoggedIn: () => !!getToken(),
     logout: () => {
+      localStorage.removeItem("vb_access_token");
       localStorage.removeItem("vb_token");
       localStorage.removeItem("vb_user");
       window.location.href = "/frontend/pages/login.html";
     },
   };
 })();
+
+// ── Expose on window so other scripts can reference window.API ──
+window.API = API;

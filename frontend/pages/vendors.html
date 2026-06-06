@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vendors — VendorBridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+
+    <style>
+      :root {
+        --transition-fast: 0.18s ease;
+      }
+
+      .page-wrapper {
+        display: flex;
+        min-height: 100vh;
+        background: var(--bg-primary);
+        font-family: "DM Sans", sans-serif;
+      }
+      .main-content {
+        margin-left: 240px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── TOPBAR ── */
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        height: 64px;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        backdrop-filter: blur(8px);
+        flex-shrink: 0;
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .topbar-left h1 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+      }
+      .topbar-left p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        padding: 4px;
+      }
+
+      /* ── PAGE BODY ── */
+      .page-body {
+        padding: 24px;
+        flex: 1;
+      }
+
+      /* ── TOOLBAR ── */
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        animation: fadeUp 0.4s ease both;
+      }
+      .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+        max-width: 360px;
+      }
+      .search-wrap input {
+        width: 100%;
+        padding: 9px 14px 9px 36px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        transition: border-color var(--transition-fast);
+      }
+      .search-wrap input:focus {
+        border-color: var(--accent-primary);
+      }
+      .search-wrap input::placeholder {
+        color: var(--text-muted);
+      }
+      .search-icon {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
+
+      .filter-select {
+        padding: 9px 14px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        cursor: pointer;
+        transition: border-color var(--transition-fast);
+      }
+      .filter-select:focus {
+        border-color: var(--accent-primary);
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: var(--accent-primary);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: opacity var(--transition-fast),
+          transform var(--transition-fast);
+      }
+      .btn-primary:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+
+      /* ── STATS ROW ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 20px;
+        animation: fadeUp 0.4s 0.05s ease both;
+      }
+      .stat-chip {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .stat-chip-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+      }
+      .stat-chip-val {
+        font-family: "Syne", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+      .stat-chip-lbl {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* ── VENDOR GRID ── */
+      .vendors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+        gap: 16px;
+        animation: fadeUp 0.4s 0.1s ease both;
+      }
+
+      /* ── VENDOR CARD ── */
+      .vendor-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform var(--transition-fast),
+          box-shadow var(--transition-fast), border-color var(--transition-fast);
+        cursor: pointer;
+        position: relative;
+      }
+      .vendor-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--border-accent);
+      }
+      .vendor-card-top {
+        padding: 20px 20px 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .vendor-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1rem;
+        color: #fff;
+        font-family: "Syne", sans-serif;
+      }
+      .vendor-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .vendor-name {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 3px;
+      }
+      .vendor-cat {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        background: var(--bg-tertiary);
+        padding: 2px 8px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+
+      .vendor-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+      .vendor-status::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .vs-approved {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .vs-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+      }
+      .vs-suspended {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+
+      .vendor-card-body {
+        padding: 0 20px 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .vc-field-lbl {
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .vc-field-val {
+        font-size: 0.82rem;
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-top: 2px;
+      }
+
+      .vendor-card-footer {
+        padding: 12px 20px;
+        border-top: 1px solid var(--border-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* Stars */
+      .stars {
+        color: #f59e0b;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+      }
+      .stars-val {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-left: 4px;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 6px;
+      }
+      .card-btn {
+        padding: 5px 12px;
+        border-radius: 7px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: opacity var(--transition-fast);
+        font-family: "DM Sans", sans-serif;
+      }
+      .card-btn:hover {
+        opacity: 0.75;
+      }
+      .cb-view {
+        background: var(--accent-primary-light);
+        color: var(--accent-primary);
+      }
+      .cb-approve {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+      }
+      .cb-suspend {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .cb-activate {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+      }
+
+      /* ── EMPTY STATE ── */
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+        gap: 10px;
+      }
+      .empty-state .es-icon {
+        font-size: 3rem;
+        opacity: 0.35;
+      }
+      .empty-state p {
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      /* ── LOADING SKELETON ── */
+      .skeleton-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 14px;
+        padding: 20px;
+        height: 180px;
+        animation: shimmer 1.4s infinite;
+      }
+      @keyframes shimmer {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* ── MODAL ── */
+      .modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        background: rgba(0, 0, 0, 0.65);
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-backdrop.show {
+        display: flex;
+      }
+      .modal-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 520px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-xl);
+        animation: slideUp 0.25s ease;
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        background: var(--bg-card);
+        z-index: 1;
+      }
+      .modal-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .modal-close {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: var(--bg-tertiary);
+        border-radius: 7px;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background var(--transition-fast);
+      }
+      .modal-close:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .modal-body {
+        padding: 24px;
+      }
+
+      /* ── DETAIL MODAL ── */
+      .detail-section {
+        margin-bottom: 20px;
+      }
+      .detail-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--border-secondary);
+      }
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .detail-field-lbl {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+      }
+      .detail-field-val {
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-top: 2px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 16px 24px;
+        border-top: 1px solid var(--border-primary);
+      }
+      .mbtn {
+        padding: 9px 20px;
+        border-radius: 9px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: opacity 0.15s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .mbtn:hover {
+        opacity: 0.85;
+      }
+      .mbtn-primary {
+        background: var(--accent-primary);
+        color: #fff;
+      }
+      .mbtn-success {
+        background: #10b981;
+        color: #fff;
+      }
+      .mbtn-danger {
+        background: #ef4444;
+        color: #fff;
+      }
+      .mbtn-ghost {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-primary);
+      }
+
+      /* ── PAGINATION ── */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 24px;
+        padding-bottom: 8px;
+      }
+      .pg-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 1px solid var(--border-primary);
+        background: var(--bg-card);
+        color: var(--text-secondary);
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--transition-fast);
+      }
+      .pg-btn:hover,
+      .pg-btn.active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: #fff;
+      }
+      .pg-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1200px) {
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .main-content {
+          margin-left: 0;
+        }
+        .mobile-menu-btn {
+          display: flex;
+          align-items: center;
+        }
+        .page-body {
+          padding: 16px;
+        }
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+        .vendors-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page-wrapper">
+      <!-- SIDEBAR (injected) -->
+      <div id="sidebar-root"></div>
+
+      <!-- MAIN -->
+      <div class="main-content">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            <div>
+              <h1>Vendors</h1>
+              <p id="topbar-sub">Manage your vendor network</p>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <!-- Add Vendor: shown only to admin -->
+            <button
+              class="btn-primary"
+              id="add-vendor-btn"
+              style="display: none"
+            >
+              ➕ Add Vendor
+            </button>
+          </div>
+        </header>
+
+        <!-- PAGE BODY -->
+        <div class="page-body">
+          <!-- TOOLBAR -->
+          <div class="toolbar">
+            <div class="search-wrap">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search vendors by name, category…"
+              />
+            </div>
+            <select class="filter-select" id="status-filter">
+              <option value="">All Statuses</option>
+              <option value="approved">Approved</option>
+              <option value="pending">Pending</option>
+              <option value="suspended">Suspended</option>
+            </select>
+            <select class="filter-select" id="category-filter">
+              <option value="">All Categories</option>
+            </select>
+          </div>
+
+          <!-- STATS ROW -->
+          <div class="stats-row" id="stats-row">
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(79, 142, 247, 0.12)"
+              >
+                🏢
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-total">—</div>
+                <div class="stat-chip-lbl">Total Vendors</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(16, 185, 129, 0.12)"
+              >
+                ✅
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-approved">—</div>
+                <div class="stat-chip-lbl">Approved</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(245, 158, 11, 0.12)"
+              >
+                ⏳
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-pending">—</div>
+                <div class="stat-chip-lbl">Pending Review</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(239, 68, 68, 0.12)"
+              >
+                🚫
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-suspended">—</div>
+                <div class="stat-chip-lbl">Suspended</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VENDOR GRID -->
+          <div class="vendors-grid" id="vendors-grid">
+            <!-- skeletons -->
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+
+          <!-- PAGINATION -->
+          <div class="pagination" id="pagination"></div>
+        </div>
+        <!-- /page-body -->
+      </div>
+      <!-- /main-content -->
+    </div>
+    <!-- /page-wrapper -->
+
+    <!-- ═══ VENDOR DETAIL MODAL ══════════════════════════════ -->
+    <div class="modal-backdrop" id="detail-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">Vendor Details</span>
+          <button class="modal-close" onclick="closeModal('detail-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body" id="detail-modal-body">Loading…</div>
+        <div class="modal-actions" id="detail-modal-actions"></div>
+      </div>
+    </div>
+
+    <!-- ═══ ADD VENDOR MODAL (Admin only) ════════════════════ -->
+    <div class="modal-backdrop" id="add-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">Add New Vendor</span>
+          <button class="modal-close" onclick="closeModal('add-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div style="display: grid; gap: 14px">
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px"
+            >
+              <div>
+                <label class="detail-field-lbl">First Name *</label
+                ><input
+                  class="modal-input"
+                  id="v-first-name"
+                  placeholder="First name"
+                />
+              </div>
+              <div>
+                <label class="detail-field-lbl">Last Name *</label
+                ><input
+                  class="modal-input"
+                  id="v-last-name"
+                  placeholder="Last name"
+                />
+              </div>
+            </div>
+            <div>
+              <label class="detail-field-lbl">Email *</label
+              ><input
+                class="modal-input"
+                id="v-email"
+                type="email"
+                placeholder="vendor@company.com"
+              />
+            </div>
+            <div>
+              <label class="detail-field-lbl">Company Name *</label
+              ><input
+                class="modal-input"
+                id="v-company"
+                placeholder="Company name"
+              />
+            </div>
+            <div>
+              <label class="detail-field-lbl">Phone</label
+              ><input
+                class="modal-input"
+                id="v-phone"
+                placeholder="10-digit phone"
+              />
+            </div>
+            <div>
+              <label class="detail-field-lbl">Vendor Category</label>
+              <select class="modal-input" id="v-category">
+                <option value="">Select category</option>
+                <option>IT & Technology</option>
+                <option>Office Supplies</option>
+                <option>Logistics & Transport</option>
+                <option>Facility Management</option>
+                <option>Raw Materials</option>
+                <option>Professional Services</option>
+                <option>Manufacturing</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="detail-field-lbl">GST Number</label
+              ><input
+                class="modal-input"
+                id="v-gst"
+                placeholder="15-char GST number"
+              />
+            </div>
+            <div>
+              <label class="detail-field-lbl">Password *</label
+              ><input
+                class="modal-input"
+                id="v-password"
+                type="password"
+                placeholder="Min 8 characters"
+              />
+            </div>
+            <div
+              id="add-error"
+              style="color: #ef4444; font-size: 0.82rem; display: none"
+            ></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="mbtn mbtn-ghost" onclick="closeModal('add-modal')">
+            Cancel
+          </button>
+          <button class="mbtn mbtn-primary" onclick="submitAddVendor()">
+            Create Vendor
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script>
+      window.SIDEBAR_ACTIVE = "vendors";
+    </script>
+    <script src="../assets/js/sidebar-loader.js"></script>
+
+    <style>
+      /* modal inputs — inline to avoid needing components.css changes */
+      .modal-input {
+        width: 100%;
+        padding: 9px 12px;
+        margin-top: 4px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: 9px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.18s;
+      }
+      .modal-input:focus {
+        border-color: var(--accent-primary);
+      }
+    </style>
+
+    <script>
+      /* ============================================================
+   VendorBridge — vendors.html
+   Role-based: all roles see vendors, admin can approve/suspend/add
+============================================================ */
+
+      // ── AUTH GUARD ────────────────────────────────────────────
+      if (!API.isLoggedIn()) location.href = "login.html";
+
+      const USER = API.getUser();
+      const ROLE = USER?.role || "procurement_officer";
+
+      // ── ROLE SETUP ────────────────────────────────────────────
+      // Admin: can approve, suspend, add vendors
+      // Manager: read-only with status visibility
+      // Procurement Officer: read-only
+      // Vendor: sees only their own profile → redirect
+      if (ROLE === "vendor") {
+        // Vendors see their own profile page instead
+        location.href = "profile.html";
+      }
+
+      if (ROLE === "admin") {
+        document.getElementById("add-vendor-btn").style.display = "inline-flex";
+        document.getElementById("topbar-sub").textContent =
+          "Admin: manage, approve & suspend vendors";
+      } else if (ROLE === "manager") {
+        document.getElementById("topbar-sub").textContent =
+          "Monitor approved & pending vendors";
+      }
+
+      // ── STATE ─────────────────────────────────────────────────
+      let allVendors = [];
+      let filtered = [];
+      let currentPage = 1;
+      const PAGE_SIZE = 9;
+
+      // ── COLOUR MAP ────────────────────────────────────────────
+      const COLORS = [
+        "#4f8ef7",
+        "#10b981",
+        "#f59e0b",
+        "#7c3aed",
+        "#ef4444",
+        "#06b6d4",
+        "#f97316",
+      ];
+      function avatarColor(name) {
+        let h = 0;
+        for (let i = 0; i < (name || "").length; i++)
+          h = (h + name.charCodeAt(i)) % COLORS.length;
+        return COLORS[h];
+      }
+      function initials(name) {
+        return (name || "V")
+          .split(" ")
+          .map((w) => w[0])
+          .slice(0, 2)
+          .join("")
+          .toUpperCase();
+      }
+      function stars(rating) {
+        const r = Math.round(parseFloat(rating || 0));
+        return "★".repeat(r) + "☆".repeat(5 - r);
+      }
+
+      // ── LOAD VENDORS ──────────────────────────────────────────
+      function loadVendors() {
+        API.get("/vendors")
+          .then((res) => {
+            allVendors = res.vendors || [];
+            populateCategories();
+            applyFilters();
+            updateStats();
+          })
+          .catch(() => {
+            // Demo data if API not ready
+            allVendors = getDemoVendors();
+            populateCategories();
+            applyFilters();
+            updateStats();
+          });
+      }
+
+      function getDemoVendors() {
+        return [
+          {
+            id: 1,
+            company: "Tata Supplies Ltd",
+            email: "contact@tata.com",
+            phone: "9876543210",
+            vendor_category: "Raw Materials",
+            gst_number: "27AABCT1332L1ZV",
+            rating: 4.5,
+            total_orders: 23,
+            status: "approved",
+            created_at: "2024-01-15",
+          },
+          {
+            id: 2,
+            company: "Reliance Infra Corp",
+            email: "info@relianceinfra.com",
+            phone: "9823451234",
+            vendor_category: "Facility Management",
+            gst_number: "27AABCR0007I1Z3",
+            rating: 4.0,
+            total_orders: 15,
+            status: "approved",
+            created_at: "2024-02-10",
+          },
+          {
+            id: 3,
+            company: "Mahindra Logistics",
+            email: "ops@mahindra.com",
+            phone: "9812341234",
+            vendor_category: "Logistics & Transport",
+            gst_number: "27AABCM4949E1ZM",
+            rating: 3.8,
+            total_orders: 9,
+            status: "approved",
+            created_at: "2024-03-01",
+          },
+          {
+            id: 4,
+            company: "Godrej Office Supplies",
+            email: "sales@godrej.com",
+            phone: "9801234567",
+            vendor_category: "Office Supplies",
+            gst_number: "27AABCG0028L1ZL",
+            rating: 4.2,
+            total_orders: 31,
+            status: "approved",
+            created_at: "2024-01-20",
+          },
+          {
+            id: 5,
+            company: "Tech Horizon Pvt Ltd",
+            email: "hello@techhorizon.in",
+            phone: "9998887776",
+            vendor_category: "IT & Technology",
+            gst_number: null,
+            rating: 0,
+            total_orders: 0,
+            status: "pending",
+            created_at: "2024-05-20",
+          },
+          {
+            id: 6,
+            company: "Green Solutions Ltd",
+            email: "info@greensol.com",
+            phone: "9887766554",
+            vendor_category: "Professional Services",
+            gst_number: null,
+            rating: 0,
+            total_orders: 0,
+            status: "pending",
+            created_at: "2024-05-25",
+          },
+          {
+            id: 7,
+            company: "L&T Procurement",
+            email: "procure@lt.com",
+            phone: "9776655443",
+            vendor_category: "Manufacturing",
+            gst_number: "27AAACL0001J1ZS",
+            rating: 4.8,
+            total_orders: 47,
+            status: "approved",
+            created_at: "2023-11-10",
+          },
+          {
+            id: 8,
+            company: "SpeedEx Couriers",
+            email: "biz@speedex.in",
+            phone: "9665544332",
+            vendor_category: "Logistics & Transport",
+            gst_number: "29AAJCS5109B2Z1",
+            rating: 2.1,
+            total_orders: 3,
+            status: "suspended",
+            created_at: "2024-01-05",
+          },
+        ];
+      }
+
+      // ── POPULATE CATEGORY FILTER ──────────────────────────────
+      function populateCategories() {
+        const cats = [
+          ...new Set(allVendors.map((v) => v.vendor_category).filter(Boolean)),
+        ].sort();
+        const sel = document.getElementById("category-filter");
+        cats.forEach((c) => {
+          const o = document.createElement("option");
+          o.value = c;
+          o.textContent = c;
+          sel.appendChild(o);
+        });
+      }
+
+      // ── FILTER + RENDER ───────────────────────────────────────
+      function applyFilters() {
+        const q = document.getElementById("search-input").value.toLowerCase();
+        const st = document.getElementById("status-filter").value;
+        const cat = document.getElementById("category-filter").value;
+
+        filtered = allVendors.filter((v) => {
+          const matchQ =
+            !q ||
+            (v.company || "").toLowerCase().includes(q) ||
+            (v.vendor_category || "").toLowerCase().includes(q) ||
+            (v.email || "").toLowerCase().includes(q);
+          const matchSt = !st || v.status === st;
+          const matchCat = !cat || v.vendor_category === cat;
+          return matchQ && matchSt && matchCat;
+        });
+
+        currentPage = 1;
+        renderPage();
+      }
+
+      function renderPage() {
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const slice = filtered.slice(start, start + PAGE_SIZE);
+        const grid = document.getElementById("vendors-grid");
+
+        if (!filtered.length) {
+          grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+      <div class="es-icon">🏢</div><p>No vendors match your filters.</p>
+    </div>`;
+          document.getElementById("pagination").innerHTML = "";
+          return;
+        }
+
+        grid.innerHTML = slice.map((v) => vendorCard(v)).join("");
+        renderPagination();
+      }
+
+      function vendorCard(v) {
+        const color = avatarColor(v.company);
+        const statusClass =
+          {
+            approved: "vs-approved",
+            pending: "vs-pending",
+            suspended: "vs-suspended",
+          }[v.status] || "vs-pending";
+        const statusLabel = v.status
+          ? v.status.charAt(0).toUpperCase() + v.status.slice(1)
+          : "—";
+
+        // Buttons depend on role
+        let actionBtns = `<button class="card-btn cb-view" onclick="openDetail(${v.id})">View</button>`;
+        if (ROLE === "admin") {
+          if (v.status === "pending")
+            actionBtns += `<button class="card-btn cb-approve"  onclick="changeStatus(${v.id},'approved')">Approve</button>`;
+          if (v.status === "approved")
+            actionBtns += `<button class="card-btn cb-suspend"  onclick="changeStatus(${v.id},'suspended')">Suspend</button>`;
+          if (v.status === "suspended")
+            actionBtns += `<button class="card-btn cb-activate" onclick="changeStatus(${v.id},'approved')">Activate</button>`;
+        }
+
+        return `
+    <div class="vendor-card" id="vc-${v.id}">
+      <div class="vendor-card-top">
+        <div class="vendor-avatar" style="background:${color};">${initials(
+          v.company
+        )}</div>
+        <div class="vendor-info">
+          <div class="vendor-name">${v.company}</div>
+          <span class="vendor-cat">${
+            v.vendor_category || "Uncategorized"
+          }</span>
+        </div>
+        <span class="vendor-status ${statusClass}">${statusLabel}</span>
+      </div>
+      <div class="vendor-card-body">
+        <div>
+          <div class="vc-field-lbl">Email</div>
+          <div class="vc-field-val" style="font-size:0.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${
+            v.email
+          }</div>
+        </div>
+        <div>
+          <div class="vc-field-lbl">Phone</div>
+          <div class="vc-field-val">${v.phone || "—"}</div>
+        </div>
+        <div>
+          <div class="vc-field-lbl">Orders</div>
+          <div class="vc-field-val">${v.total_orders || 0}</div>
+        </div>
+        <div>
+          <div class="vc-field-lbl">GST</div>
+          <div class="vc-field-val" style="font-size:0.72rem;">${
+            v.gst_number || "—"
+          }</div>
+        </div>
+      </div>
+      <div class="vendor-card-footer">
+        <div style="display:flex;align-items:center;">
+          <span class="stars">${stars(v.rating)}</span>
+          <span class="stars-val">${parseFloat(v.rating || 0).toFixed(1)}</span>
+        </div>
+        <div class="card-actions">${actionBtns}</div>
+      </div>
+    </div>`;
+      }
+
+      // ── PAGINATION ────────────────────────────────────────────
+      function renderPagination() {
+        const total = Math.ceil(filtered.length / PAGE_SIZE);
+        const pg = document.getElementById("pagination");
+        if (total <= 1) {
+          pg.innerHTML = "";
+          return;
+        }
+
+        let html = `<button class="pg-btn" ${
+          currentPage === 1 ? "disabled" : ""
+        } onclick="goPage(${currentPage - 1})">‹</button>`;
+        for (let i = 1; i <= total; i++) {
+          html += `<button class="pg-btn ${
+            i === currentPage ? "active" : ""
+          }" onclick="goPage(${i})">${i}</button>`;
+        }
+        html += `<button class="pg-btn" ${
+          currentPage === total ? "disabled" : ""
+        } onclick="goPage(${currentPage + 1})">›</button>`;
+        pg.innerHTML = html;
+      }
+      function goPage(p) {
+        currentPage = p;
+        renderPage();
+        window.scrollTo(0, 0);
+      }
+
+      // ── STATS ─────────────────────────────────────────────────
+      function updateStats() {
+        document.getElementById("stat-total").textContent = allVendors.length;
+        document.getElementById("stat-approved").textContent =
+          allVendors.filter((v) => v.status === "approved").length;
+        document.getElementById("stat-pending").textContent = allVendors.filter(
+          (v) => v.status === "pending"
+        ).length;
+        document.getElementById("stat-suspended").textContent =
+          allVendors.filter((v) => v.status === "suspended").length;
+      }
+
+      // ── DETAIL MODAL ──────────────────────────────────────────
+      function openDetail(id) {
+        const v = allVendors.find((x) => x.id === id);
+        if (!v) return;
+        const color = avatarColor(v.company);
+
+        document.getElementById("detail-modal-body").innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+      <div style="width:56px;height:56px;border-radius:14px;background:${color};display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;flex-shrink:0;">${initials(
+          v.company
+        )}</div>
+      <div>
+        <div style="font-size:1.05rem;font-weight:700;color:var(--text-primary);">${
+          v.company
+        }</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;">${
+          v.vendor_category || "Uncategorized"
+        }</div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Contact Information</div>
+      <div class="detail-grid">
+        <div><div class="detail-field-lbl">Email</div><div class="detail-field-val">${
+          v.email
+        }</div></div>
+        <div><div class="detail-field-lbl">Phone</div><div class="detail-field-val">${
+          v.phone || "—"
+        }</div></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Business Details</div>
+      <div class="detail-grid">
+        <div><div class="detail-field-lbl">GST Number</div><div class="detail-field-val" style="font-family:monospace;font-size:0.8rem;">${
+          v.gst_number || "Not provided"
+        }</div></div>
+        <div><div class="detail-field-lbl">Status</div><div class="detail-field-val"><span class="vendor-status ${
+          {
+            approved: "vs-approved",
+            pending: "vs-pending",
+            suspended: "vs-suspended",
+          }[v.status] || "vs-pending"
+        }">${v.status || "—"}</span></div></div>
+        <div><div class="detail-field-lbl">Rating</div><div class="detail-field-val"><span class="stars">${stars(
+          v.rating
+        )}</span> <span class="stars-val">${parseFloat(v.rating || 0).toFixed(
+          1
+        )}</span></div></div>
+        <div><div class="detail-field-lbl">Total Orders</div><div class="detail-field-val">${
+          v.total_orders || 0
+        }</div></div>
+        <div><div class="detail-field-lbl">Registered</div><div class="detail-field-val">${fmtDate(
+          v.created_at
+        )}</div></div>
+      </div>
+    </div>`;
+
+        // Action buttons in modal footer
+        let acts = `<button class="mbtn mbtn-ghost" onclick="closeModal('detail-modal')">Close</button>`;
+        if (ROLE === "admin") {
+          if (v.status === "pending")
+            acts += `<button class="mbtn mbtn-success" onclick="changeStatus(${v.id},'approved');closeModal('detail-modal')">✅ Approve</button>`;
+          if (v.status === "approved")
+            acts += `<button class="mbtn mbtn-danger"  onclick="changeStatus(${v.id},'suspended');closeModal('detail-modal')">🚫 Suspend</button>`;
+          if (v.status === "suspended")
+            acts += `<button class="mbtn mbtn-success" onclick="changeStatus(${v.id},'approved');closeModal('detail-modal')">✅ Activate</button>`;
+        }
+        document.getElementById("detail-modal-actions").innerHTML = acts;
+        document.getElementById("detail-modal").classList.add("show");
+      }
+
+      // ── CHANGE STATUS ─────────────────────────────────────────
+      function changeStatus(id, newStatus) {
+        API.patch(`/vendors/${id}/status`, { status: newStatus })
+          .then(() => {
+            const v = allVendors.find((x) => x.id === id);
+            if (v) v.status = newStatus;
+            applyFilters();
+            updateStats();
+            showToast(
+              newStatus === "approved"
+                ? "✅ Vendor approved!"
+                : newStatus === "suspended"
+                ? "🚫 Vendor suspended"
+                : "Status updated",
+              newStatus === "approved" ? "success" : "warning"
+            );
+          })
+          .catch(() => {
+            // Demo: apply locally
+            const v = allVendors.find((x) => x.id === id);
+            if (v) v.status = newStatus;
+            applyFilters();
+            updateStats();
+            showToast("Status updated (demo)", "info");
+          });
+      }
+
+      // ── ADD VENDOR ────────────────────────────────────────────
+      document
+        .getElementById("add-vendor-btn")
+        ?.addEventListener("click", () => {
+          document.getElementById("add-modal").classList.add("show");
+        });
+
+      function submitAddVendor() {
+        const err = document.getElementById("add-error");
+        const data = {
+          first_name: document.getElementById("v-first-name").value.trim(),
+          last_name: document.getElementById("v-last-name").value.trim(),
+          email: document.getElementById("v-email").value.trim(),
+          company: document.getElementById("v-company").value.trim(),
+          phone: document.getElementById("v-phone").value.trim(),
+          vendor_category: document.getElementById("v-category").value,
+          gst_number: document.getElementById("v-gst").value.trim(),
+          password: document.getElementById("v-password").value,
+          role: "vendor",
+        };
+        if (
+          !data.first_name ||
+          !data.last_name ||
+          !data.email ||
+          !data.company ||
+          !data.password
+        ) {
+          err.textContent = "Please fill all required (*) fields.";
+          err.style.display = "block";
+          return;
+        }
+        err.style.display = "none";
+
+        API.post("/auth/register", data)
+          .then(() => {
+            closeModal("add-modal");
+            showToast("✅ Vendor account created!", "success");
+            loadVendors();
+          })
+          .catch((e) => {
+            err.textContent = e.message || "Failed to create vendor.";
+            err.style.display = "block";
+          });
+      }
+
+      // ── MODAL HELPERS ─────────────────────────────────────────
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+      }
+      document.querySelectorAll(".modal-backdrop").forEach((m) => {
+        m.addEventListener("click", (e) => {
+          if (e.target === m) m.classList.remove("show");
+        });
+      });
+
+      // ── TOAST ─────────────────────────────────────────────────
+      function showToast(msg, type = "info") {
+        const colors = {
+          success: "#10b981",
+          warning: "#f59e0b",
+          info: "#4f8ef7",
+          error: "#ef4444",
+        };
+        const t = document.createElement("div");
+        t.style.cssText = `position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:10px 18px;border-radius:10px;font-size:0.83rem;font-weight:600;background:${colors[type]};color:#fff;box-shadow:0 8px 24px rgba(0,0,0,0.3);animation:slideUp 0.2s ease;`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+      }
+
+      // ── DATE HELPER ───────────────────────────────────────────
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      // ── EVENT LISTENERS ───────────────────────────────────────
+      document
+        .getElementById("search-input")
+        .addEventListener("input", applyFilters);
+      document
+        .getElementById("status-filter")
+        .addEventListener("change", applyFilters);
+      document
+        .getElementById("category-filter")
+        .addEventListener("change", applyFilters);
+
+      // Mobile menu
+      document
+        .getElementById("mobile-menu-btn")
+        .addEventListener("click", () => {
+          document.getElementById("sidebar")?.classList.toggle("open");
+          document.getElementById("sidebar-overlay")?.classList.toggle("show");
+        });
+
+      // ── INIT ──────────────────────────────────────────────────
+      loadVendors();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RFQs — VendorBridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <style>
+      :root {
+        --tr: 0.18s ease;
+      }
+
+      .page-wrapper {
+        display: flex;
+        min-height: 100vh;
+        background: var(--bg-primary);
+        font-family: "DM Sans", sans-serif;
+      }
+      .main-content {
+        margin-left: 240px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── TOPBAR ── */
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        height: 64px;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        backdrop-filter: blur(8px);
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .topbar-left h1 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+      }
+      .topbar-left p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        padding: 4px;
+      }
+
+      /* ── BODY ── */
+      .page-body {
+        padding: 24px;
+        flex: 1;
+      }
+
+      /* ── TOOLBAR ── */
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        animation: fadeUp 0.4s ease both;
+      }
+      .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+        max-width: 360px;
+      }
+      .search-wrap input {
+        width: 100%;
+        padding: 9px 14px 9px 36px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        transition: border-color var(--tr);
+      }
+      .search-wrap input:focus {
+        border-color: var(--accent-primary);
+      }
+      .search-wrap input::placeholder {
+        color: var(--text-muted);
+      }
+      .search-icon {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
+      .filter-select {
+        padding: 9px 14px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        cursor: pointer;
+        transition: border-color var(--tr);
+      }
+      .filter-select:focus {
+        border-color: var(--accent-primary);
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: var(--accent-primary);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: opacity var(--tr), transform var(--tr);
+      }
+      .btn-primary:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+
+      /* ── STATS ROW ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-bottom: 20px;
+        animation: fadeUp 0.4s 0.05s ease both;
+      }
+      .stat-chip {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .stat-chip-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+      }
+      .stat-chip-val {
+        font-family: "Syne", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+      .stat-chip-lbl {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* ── RFQ GRID ── */
+      .rfqs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 16px;
+        animation: fadeUp 0.4s 0.1s ease both;
+      }
+
+      /* ── RFQ CARD ── */
+      .rfq-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform var(--tr), box-shadow var(--tr),
+          border-color var(--tr);
+        cursor: pointer;
+        position: relative;
+      }
+      .rfq-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--border-accent);
+      }
+      .rfq-card-top {
+        padding: 18px 18px 14px;
+      }
+      .rfq-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      .rfq-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.3;
+        flex: 1;
+      }
+      .rfq-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .rfq-status::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .rs-draft {
+        background: rgba(148, 163, 184, 0.12);
+        color: #94a3b8;
+      }
+      .rs-open {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .rs-closed {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .rs-awarded {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+      }
+      .rfq-desc {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 12px;
+      }
+      .rfq-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .rfq-meta-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        background: var(--bg-tertiary);
+        border-radius: 100px;
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+      }
+      .rfq-card-footer {
+        padding: 12px 18px;
+        border-top: 1px solid var(--border-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .rfq-footer-left {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+      .card-actions {
+        display: flex;
+        gap: 6px;
+      }
+      .card-btn {
+        padding: 5px 12px;
+        border-radius: 7px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: opacity var(--tr);
+        font-family: "DM Sans", sans-serif;
+      }
+      .card-btn:hover {
+        opacity: 0.75;
+      }
+      .cb-view {
+        background: var(--accent-primary-light);
+        color: var(--accent-primary);
+      }
+      .cb-edit {
+        background: rgba(79, 142, 247, 0.1);
+        color: #4f8ef7;
+      }
+      .cb-open {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+      }
+      .cb-close {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .cb-delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+
+      /* ── DEADLINE BADGE ── */
+      .deadline-urgent {
+        color: #ef4444 !important;
+      }
+      .deadline-soon {
+        color: #f59e0b !important;
+      }
+      .deadline-ok {
+        color: var(--text-muted);
+      }
+
+      /* ── EMPTY & SKELETON ── */
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+        gap: 10px;
+        grid-column: 1/-1;
+      }
+      .empty-state .es-icon {
+        font-size: 3rem;
+        opacity: 0.35;
+      }
+      .empty-state p {
+        font-size: 0.85rem;
+        text-align: center;
+      }
+      .skeleton-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 14px;
+        height: 190px;
+        animation: shimmer 1.4s infinite;
+      }
+      @keyframes shimmer {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* ── PAGINATION ── */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 24px;
+        padding-bottom: 8px;
+      }
+      .pg-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 1px solid var(--border-primary);
+        background: var(--bg-card);
+        color: var(--text-secondary);
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--tr);
+      }
+      .pg-btn:hover,
+      .pg-btn.active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: #fff;
+      }
+      .pg-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* ── MODAL BASE ── */
+      .modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        background: rgba(0, 0, 0, 0.65);
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-backdrop.show {
+        display: flex;
+      }
+      .modal-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 560px;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-xl);
+        animation: slideUp 0.25s ease;
+      }
+      .modal-box-wide {
+        max-width: 720px;
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-primary);
+        position: sticky;
+        top: 0;
+        background: var(--bg-card);
+        z-index: 1;
+      }
+      .modal-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .modal-close {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: var(--bg-tertiary);
+        border-radius: 7px;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background var(--tr);
+      }
+      .modal-close:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .modal-body {
+        padding: 24px;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 16px 24px;
+        border-top: 1px solid var(--border-primary);
+      }
+      .modal-input {
+        width: 100%;
+        padding: 9px 12px;
+        margin-top: 4px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: 9px;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.18s;
+      }
+      .modal-input:focus {
+        border-color: var(--accent-primary);
+      }
+      textarea.modal-input {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .modal-label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        display: block;
+        margin-bottom: 2px;
+        margin-top: 14px;
+      }
+      .modal-label:first-child {
+        margin-top: 0;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .form-error {
+        color: #ef4444;
+        font-size: 0.82rem;
+        display: none;
+        margin-top: 8px;
+      }
+
+      /* ── MODAL BUTTONS ── */
+      .mbtn {
+        padding: 9px 20px;
+        border-radius: 9px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: opacity 0.15s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .mbtn:hover {
+        opacity: 0.85;
+      }
+      .mbtn-primary {
+        background: var(--accent-primary);
+        color: #fff;
+      }
+      .mbtn-success {
+        background: #10b981;
+        color: #fff;
+      }
+      .mbtn-warning {
+        background: #f59e0b;
+        color: #fff;
+      }
+      .mbtn-danger {
+        background: #ef4444;
+        color: #fff;
+      }
+      .mbtn-ghost {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-primary);
+      }
+
+      /* ── DETAIL MODAL ── */
+      .detail-section {
+        margin-bottom: 20px;
+      }
+      .detail-section-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--border-secondary);
+      }
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .detail-field-lbl {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+      }
+      .detail-field-val {
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-top: 2px;
+      }
+
+      /* ── VENDOR INVITE PANEL ── */
+      .vendor-invite-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 240px;
+        overflow-y: auto;
+      }
+      .vendor-invite-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        background: var(--bg-tertiary);
+        border-radius: 9px;
+        border: 1px solid var(--border-secondary);
+        transition: border-color var(--tr);
+      }
+      .vendor-invite-item:hover {
+        border-color: var(--accent-primary);
+      }
+      .vendor-invite-item input[type="checkbox"] {
+        accent-color: var(--accent-primary);
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+      }
+      .vendor-invite-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: #fff;
+        font-family: "Syne", sans-serif;
+        flex-shrink: 0;
+      }
+      .vendor-invite-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .vendor-invite-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .vendor-invite-sub {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+      }
+      .already-invited {
+        font-size: 0.65rem;
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        padding: 1px 7px;
+        border-radius: 100px;
+      }
+
+      /* ── INVITED VENDOR TABLE ── */
+      .vendor-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+      }
+      .vendor-table th {
+        text-align: left;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--border-secondary);
+      }
+      .vendor-table td {
+        padding: 9px 10px;
+        border-bottom: 1px solid var(--border-secondary);
+        color: var(--text-primary);
+      }
+      .vendor-table tr:last-child td {
+        border-bottom: none;
+      }
+      .quoted-badge {
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 100px;
+        font-size: 0.68rem;
+        font-weight: 600;
+      }
+      .qb-yes {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .qb-no {
+        background: rgba(148, 163, 184, 0.1);
+        color: #94a3b8;
+      }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1200px) {
+        .stats-row {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .main-content {
+          margin-left: 0;
+        }
+        .mobile-menu-btn {
+          display: flex;
+          align-items: center;
+        }
+        .page-body {
+          padding: 16px;
+        }
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 540px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .rfqs-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page-wrapper">
+      <div id="sidebar-root"></div>
+
+      <div class="main-content">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            <div>
+              <h1>RFQs</h1>
+              <p id="topbar-sub">Requests for Quotation</p>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <button
+              class="btn-primary"
+              id="create-rfq-btn"
+              style="display: none"
+            >
+              ➕ New RFQ
+            </button>
+          </div>
+        </header>
+
+        <!-- PAGE BODY -->
+        <div class="page-body">
+          <!-- TOOLBAR -->
+          <div class="toolbar">
+            <div class="search-wrap">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search RFQs by title, category…"
+              />
+            </div>
+            <select class="filter-select" id="status-filter">
+              <option value="">All Statuses</option>
+              <option value="draft">Draft</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              <option value="awarded">Awarded</option>
+            </select>
+            <select class="filter-select" id="category-filter">
+              <option value="">All Categories</option>
+            </select>
+          </div>
+
+          <!-- STATS ROW -->
+          <div class="stats-row">
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(79, 142, 247, 0.12)"
+              >
+                📋
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-total">—</div>
+                <div class="stat-chip-lbl">Total RFQs</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(148, 163, 184, 0.12)"
+              >
+                ✏️
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-draft">—</div>
+                <div class="stat-chip-lbl">Draft</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(16, 185, 129, 0.12)"
+              >
+                📬
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-open">—</div>
+                <div class="stat-chip-lbl">Open</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(239, 68, 68, 0.12)"
+              >
+                🔒
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-closed">—</div>
+                <div class="stat-chip-lbl">Closed</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <div
+                class="stat-chip-icon"
+                style="background: rgba(245, 158, 11, 0.12)"
+              >
+                🏆
+              </div>
+              <div>
+                <div class="stat-chip-val" id="stat-awarded">—</div>
+                <div class="stat-chip-lbl">Awarded</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RFQ GRID -->
+          <div class="rfqs-grid" id="rfqs-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+
+          <!-- PAGINATION -->
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DETAIL MODAL ══════════════════════════════════════ -->
+    <div class="modal-backdrop" id="detail-modal">
+      <div class="modal-box modal-box-wide">
+        <div class="modal-header">
+          <span class="modal-title">RFQ Details</span>
+          <button class="modal-close" onclick="closeModal('detail-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body" id="detail-body">Loading…</div>
+        <div class="modal-actions" id="detail-actions"></div>
+      </div>
+    </div>
+
+    <!-- ═══ CREATE / EDIT MODAL ══════════════════════════════ -->
+    <div class="modal-backdrop" id="rfq-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title" id="rfq-modal-title">New RFQ</span>
+          <button class="modal-close" onclick="closeModal('rfq-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <label class="modal-label">Title *</label>
+          <input
+            class="modal-input"
+            id="rfq-title"
+            placeholder="e.g. Office Supplies Q3 2025"
+          />
+
+          <label class="modal-label">Description</label>
+          <textarea
+            class="modal-input"
+            id="rfq-desc"
+            placeholder="Describe what you need…"
+          ></textarea>
+
+          <div class="form-row">
+            <div>
+              <label class="modal-label">Category</label>
+              <select class="modal-input" id="rfq-category">
+                <option value="">Select category</option>
+                <option>IT &amp; Technology</option>
+                <option>Office Supplies</option>
+                <option>Logistics &amp; Transport</option>
+                <option>Facility Management</option>
+                <option>Raw Materials</option>
+                <option>Professional Services</option>
+                <option>Manufacturing</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="modal-label">Budget (₹)</label>
+              <input
+                class="modal-input"
+                id="rfq-budget"
+                type="number"
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label class="modal-label">Deadline</label>
+              <input
+                class="modal-input"
+                id="rfq-deadline"
+                type="datetime-local"
+              />
+            </div>
+            <div>
+              <label class="modal-label">Status</label>
+              <select class="modal-input" id="rfq-status-select">
+                <option value="draft">Draft</option>
+                <option value="open">Open</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-error" id="rfq-error"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="mbtn mbtn-ghost" onclick="closeModal('rfq-modal')">
+            Cancel
+          </button>
+          <button
+            class="mbtn mbtn-primary"
+            id="rfq-submit-btn"
+            onclick="submitRFQ()"
+          >
+            Create RFQ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ INVITE VENDORS MODAL ════════════════════════════════ -->
+    <div class="modal-backdrop" id="invite-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">Invite Vendors</span>
+          <button class="modal-close" onclick="closeModal('invite-modal')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <p
+            style="
+              font-size: 0.82rem;
+              color: var(--text-muted);
+              margin-bottom: 14px;
+            "
+          >
+            Select vendors to invite to this RFQ. Invited vendors will be able
+            to submit quotations.
+          </p>
+          <div class="search-wrap" style="max-width: 100%; margin-bottom: 14px">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="invite-search"
+              class="modal-input"
+              style="padding-left: 34px"
+              placeholder="Search vendors…"
+              oninput="filterInviteList()"
+            />
+          </div>
+          <div class="vendor-invite-list" id="vendor-invite-list">
+            <div
+              style="
+                text-align: center;
+                color: var(--text-muted);
+                padding: 20px;
+              "
+            >
+              Loading vendors…
+            </div>
+          </div>
+          <div class="form-error" id="invite-error"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="mbtn mbtn-ghost" onclick="closeModal('invite-modal')">
+            Cancel
+          </button>
+          <button class="mbtn mbtn-primary" onclick="submitInvite()">
+            Invite Selected
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script>
+      window.SIDEBAR_ACTIVE = "rfqs";
+    </script>
+    <script src="../assets/js/sidebar-loader.js"></script>
+
+    <script>
+      /* ============================================================
+       VendorBridge — rfqs.html  (Phase 3)
+       Role-based RFQ management
+    ============================================================ */
+
+      // ── AUTH GUARD ──────────────────────────────────────────────
+      if (!API.isLoggedIn()) location.href = "login.html";
+
+      const USER = API.getUser();
+      const ROLE = USER?.role || "procurement_officer";
+
+      // ── ROLE SETUP ───────────────────────────────────────────────
+      // procurement_officer & admin can create RFQs
+      if (ROLE === "procurement_officer" || ROLE === "admin") {
+        document.getElementById("create-rfq-btn").style.display = "inline-flex";
+      }
+
+      const SUB_TEXT = {
+        admin: "Full access — all RFQs",
+        manager: "Monitor all RFQs",
+        procurement_officer: "Your RFQs + all open RFQs",
+        vendor: "RFQs you have been invited to",
+      };
+      document.getElementById("topbar-sub").textContent =
+        SUB_TEXT[ROLE] || "RFQs";
+
+      // ── STATE ─────────────────────────────────────────────────────
+      let allRFQs = [];
+      let filtered = [];
+      let currentPage = 1;
+      const PAGE_SIZE = 9;
+      let editingId = null; // null = create mode, number = edit mode
+      let inviteRfqId = null;
+      let allVendors = [];
+      let alreadyInvited = new Set();
+
+      // ── COLOURS ──────────────────────────────────────────────────
+      const COLORS = [
+        "#4f8ef7",
+        "#10b981",
+        "#f59e0b",
+        "#7c3aed",
+        "#ef4444",
+        "#06b6d4",
+        "#f97316",
+      ];
+      function avatarColor(str) {
+        let h = 0;
+        for (let i = 0; i < (str || "").length; i++)
+          h = (h + str.charCodeAt(i)) % COLORS.length;
+        return COLORS[h];
+      }
+      function initials(str) {
+        return (str || "R")
+          .split(" ")
+          .map((w) => w[0])
+          .slice(0, 2)
+          .join("")
+          .toUpperCase();
+      }
+
+      // ── STATUS HELPERS ────────────────────────────────────────────
+      const STATUS_CLASS = {
+        draft: "rs-draft",
+        open: "rs-open",
+        closed: "rs-closed",
+        awarded: "rs-awarded",
+      };
+      const STATUS_ICON = {
+        draft: "✏️",
+        open: "📬",
+        closed: "🔒",
+        awarded: "🏆",
+      };
+      function statusLabel(s) {
+        return s ? s.charAt(0).toUpperCase() + s.slice(1) : "—";
+      }
+
+      // ── DEADLINE HELPER ───────────────────────────────────────────
+      function deadlineInfo(dl) {
+        if (!dl) return { label: "No deadline", cls: "deadline-ok" };
+        const diff = (new Date(dl) - Date.now()) / 86400000;
+        if (diff < 0) return { label: "Expired", cls: "deadline-urgent" };
+        if (diff < 2)
+          return { label: fmtDate(dl) + " ⚠️", cls: "deadline-urgent" };
+        if (diff < 7) return { label: fmtDate(dl), cls: "deadline-soon" };
+        return { label: fmtDate(dl), cls: "deadline-ok" };
+      }
+
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+      function fmtDatetime(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+      function fmtCurrency(n) {
+        if (!n) return "—";
+        return "₹ " + Number(n).toLocaleString("en-IN");
+      }
+
+      // ── LOAD DATA ────────────────────────────────────────────────
+      function loadRFQs() {
+        API.get("/rfqs")
+          .then((res) => {
+            allRFQs = res.rfqs || [];
+            populateCategories();
+            applyFilters();
+            updateStats();
+          })
+          .catch(() => {
+            allRFQs = getDemoRFQs();
+            populateCategories();
+            applyFilters();
+            updateStats();
+          });
+      }
+
+      function getDemoRFQs() {
+        return [
+          {
+            id: 1,
+            title: "Office Supplies — Q3 2025",
+            description: "Pens, paper, toner cartridges for all floors.",
+            category: "Office Supplies",
+            budget: 150000,
+            deadline: new Date(Date.now() + 3 * 86400000).toISOString(),
+            status: "open",
+            created_by: 2,
+            creator_name: "Priya Sharma",
+            creator_company: "ABC Corp",
+            vendor_count: 3,
+            quote_count: 2,
+            created_at: "2025-06-01",
+          },
+          {
+            id: 2,
+            title: "IT Hardware Refresh",
+            description: "50 laptops and peripherals for engineering team.",
+            category: "IT & Technology",
+            budget: 2500000,
+            deadline: new Date(Date.now() + 12 * 86400000).toISOString(),
+            status: "open",
+            created_by: 2,
+            creator_name: "Priya Sharma",
+            creator_company: "ABC Corp",
+            vendor_count: 5,
+            quote_count: 3,
+            created_at: "2025-06-03",
+          },
+          {
+            id: 3,
+            title: "Courier Service Empanelment",
+            description: "Annual contract for last-mile delivery services.",
+            category: "Logistics & Transport",
+            budget: null,
+            deadline: new Date(Date.now() - 2 * 86400000).toISOString(),
+            status: "closed",
+            created_by: 3,
+            creator_name: "Rahul Mehta",
+            creator_company: "ABC Corp",
+            vendor_count: 4,
+            quote_count: 4,
+            created_at: "2025-05-20",
+          },
+          {
+            id: 4,
+            title: "Server Room AC Maintenance",
+            description: "Quarterly AMC for precision cooling units.",
+            category: "Facility Management",
+            budget: 80000,
+            deadline: new Date(Date.now() + 30 * 86400000).toISOString(),
+            status: "draft",
+            created_by: 2,
+            creator_name: "Priya Sharma",
+            creator_company: "ABC Corp",
+            vendor_count: 0,
+            quote_count: 0,
+            created_at: "2025-06-05",
+          },
+          {
+            id: 5,
+            title: "Raw Material Procurement — Steel",
+            description: "500 MT of mild steel sheets for manufacturing.",
+            category: "Raw Materials",
+            budget: 4500000,
+            deadline: new Date(Date.now() + 5 * 86400000).toISOString(),
+            status: "open",
+            created_by: 3,
+            creator_name: "Rahul Mehta",
+            creator_company: "ABC Corp",
+            vendor_count: 6,
+            quote_count: 1,
+            created_at: "2025-05-28",
+          },
+          {
+            id: 6,
+            title: "Security Audit Services",
+            description: "Annual VAPT and ISO 27001 gap assessment.",
+            category: "Professional Services",
+            budget: 300000,
+            deadline: null,
+            status: "awarded",
+            created_by: 2,
+            creator_name: "Priya Sharma",
+            creator_company: "ABC Corp",
+            vendor_count: 3,
+            quote_count: 3,
+            created_at: "2025-04-15",
+          },
+        ];
+      }
+
+      // ── CATEGORIES ───────────────────────────────────────────────
+      function populateCategories() {
+        const cats = [
+          ...new Set(allRFQs.map((r) => r.category).filter(Boolean)),
+        ].sort();
+        const sel = document.getElementById("category-filter");
+        // Remove dynamic options first
+        while (sel.options.length > 1) sel.remove(1);
+        cats.forEach((c) => {
+          const o = document.createElement("option");
+          o.value = c;
+          o.textContent = c;
+          sel.appendChild(o);
+        });
+      }
+
+      // ── FILTER + RENDER ──────────────────────────────────────────
+      function applyFilters() {
+        const q = document.getElementById("search-input").value.toLowerCase();
+        const st = document.getElementById("status-filter").value;
+        const cat = document.getElementById("category-filter").value;
+
+        filtered = allRFQs.filter((r) => {
+          const matchQ =
+            !q ||
+            (r.title || "").toLowerCase().includes(q) ||
+            (r.category || "").toLowerCase().includes(q) ||
+            (r.description || "").toLowerCase().includes(q);
+          const matchSt = !st || r.status === st;
+          const matchCat = !cat || r.category === cat;
+          return matchQ && matchSt && matchCat;
+        });
+
+        currentPage = 1;
+        renderPage();
+      }
+
+      function renderPage() {
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const slice = filtered.slice(start, start + PAGE_SIZE);
+        const grid = document.getElementById("rfqs-grid");
+
+        if (!filtered.length) {
+          grid.innerHTML = `<div class="empty-state"><div class="es-icon">📋</div><p>No RFQs match your filters.</p></div>`;
+          document.getElementById("pagination").innerHTML = "";
+          return;
+        }
+
+        grid.innerHTML = slice.map((r) => rfqCard(r)).join("");
+        renderPagination();
+      }
+
+      function rfqCard(r) {
+        const sc = STATUS_CLASS[r.status] || "rs-draft";
+        const sl = statusLabel(r.status);
+        const dl = deadlineInfo(r.deadline);
+        const isOwner = r.created_by === USER?.id || ROLE === "admin";
+
+        // Action buttons based on role
+        let actions = `<button class="card-btn cb-view" onclick="openDetail(${r.id})">View</button>`;
+        if (ROLE !== "vendor" && ROLE !== "manager") {
+          if (isOwner || ROLE === "admin") {
+            if (r.status === "draft") {
+              actions += `<button class="card-btn cb-edit" onclick="openEditModal(${r.id})">Edit</button>`;
+              actions += `<button class="card-btn cb-open" onclick="changeStatus(${r.id},'open')">Publish</button>`;
+            }
+            if (r.status === "open") {
+              actions += `<button class="card-btn cb-close" onclick="changeStatus(${r.id},'closed')">Close</button>`;
+            }
+          }
+        }
+
+        return `
+      <div class="rfq-card" id="rc-${r.id}">
+        <div class="rfq-card-top">
+          <div class="rfq-card-header">
+            <div class="rfq-title">${r.title}</div>
+            <span class="rfq-status ${sc}">${sl}</span>
+          </div>
+          <div class="rfq-desc">${
+            r.description || "No description provided."
+          }</div>
+          <div class="rfq-meta-row">
+            ${
+              r.category
+                ? `<span class="rfq-meta-tag">📦 ${r.category}</span>`
+                : ""
+            }
+            ${
+              r.budget
+                ? `<span class="rfq-meta-tag">💰 ${fmtCurrency(
+                    r.budget
+                  )}</span>`
+                : ""
+            }
+            <span class="rfq-meta-tag ${dl.cls}">🗓 ${dl.label}</span>
+            <span class="rfq-meta-tag">👥 ${r.vendor_count} vendor${
+          r.vendor_count !== 1 ? "s" : ""
+        }</span>
+          </div>
+        </div>
+        <div class="rfq-card-footer">
+          <div class="rfq-footer-left">by ${r.creator_name || "—"}</div>
+          <div class="card-actions">${actions}</div>
+        </div>
+      </div>`;
+      }
+
+      // ── PAGINATION ───────────────────────────────────────────────
+      function renderPagination() {
+        const total = Math.ceil(filtered.length / PAGE_SIZE);
+        const pg = document.getElementById("pagination");
+        if (total <= 1) {
+          pg.innerHTML = "";
+          return;
+        }
+        let html = `<button class="pg-btn" ${
+          currentPage === 1 ? "disabled" : ""
+        } onclick="goPage(${currentPage - 1})">‹</button>`;
+        for (let i = 1; i <= total; i++)
+          html += `<button class="pg-btn ${
+            i === currentPage ? "active" : ""
+          }" onclick="goPage(${i})">${i}</button>`;
+        html += `<button class="pg-btn" ${
+          currentPage === total ? "disabled" : ""
+        } onclick="goPage(${currentPage + 1})">›</button>`;
+        pg.innerHTML = html;
+      }
+      function goPage(p) {
+        currentPage = p;
+        renderPage();
+        window.scrollTo(0, 0);
+      }
+
+      // ── STATS ─────────────────────────────────────────────────────
+      function updateStats() {
+        document.getElementById("stat-total").textContent = allRFQs.length;
+        document.getElementById("stat-draft").textContent = allRFQs.filter(
+          (r) => r.status === "draft"
+        ).length;
+        document.getElementById("stat-open").textContent = allRFQs.filter(
+          (r) => r.status === "open"
+        ).length;
+        document.getElementById("stat-closed").textContent = allRFQs.filter(
+          (r) => r.status === "closed"
+        ).length;
+        document.getElementById("stat-awarded").textContent = allRFQs.filter(
+          (r) => r.status === "awarded"
+        ).length;
+      }
+
+      // ── DETAIL MODAL ──────────────────────────────────────────────
+      function openDetail(id) {
+        const r = allRFQs.find((x) => x.id === id);
+        if (!r) return;
+        const sc = STATUS_CLASS[r.status] || "rs-draft";
+        const dl = deadlineInfo(r.deadline);
+        const isOwner = r.created_by === USER?.id || ROLE === "admin";
+
+        document.getElementById("detail-body").innerHTML = `
+        <div class="detail-section">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;">
+            <div style="flex:1;">
+              <div style="font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">${
+                r.title
+              }</div>
+              <span class="rfq-status ${sc}">${statusLabel(r.status)}</span>
+            </div>
+          </div>
+          ${
+            r.description
+              ? `<div style="font-size:.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;">${r.description}</div>`
+              : ""
+          }
+          <div class="detail-grid">
+            <div><div class="detail-field-lbl">Category</div><div class="detail-field-val">${
+              r.category || "—"
+            }</div></div>
+            <div><div class="detail-field-lbl">Budget</div><div class="detail-field-val">${fmtCurrency(
+              r.budget
+            )}</div></div>
+            <div><div class="detail-field-lbl">Deadline</div><div class="detail-field-val ${
+              dl.cls
+            }">${dl.label}</div></div>
+            <div><div class="detail-field-lbl">Vendors Invited</div><div class="detail-field-val">${
+              r.vendor_count
+            }</div></div>
+            <div><div class="detail-field-lbl">Created By</div><div class="detail-field-val">${
+              r.creator_name || "—"
+            }</div></div>
+            <div><div class="detail-field-lbl">Created</div><div class="detail-field-val">${fmtDate(
+              r.created_at
+            )}</div></div>
+          </div>
+        </div>
+        ${
+          r.vendors && r.vendors.length
+            ? `
+        <div class="detail-section">
+          <div class="detail-section-title">Invited Vendors (${
+            r.vendors.length
+          })</div>
+          <table class="vendor-table">
+            <thead><tr><th>Company</th><th>Email</th><th>Quoted</th><th>Invited</th></tr></thead>
+            <tbody>
+              ${r.vendors
+                .map(
+                  (v) => `
+              <tr>
+                <td style="font-weight:600;">${v.company}</td>
+                <td style="font-size:.78rem;color:var(--text-muted);">${
+                  v.email
+                }</td>
+                <td><span class="quoted-badge ${
+                  v.has_quoted ? "qb-yes" : "qb-no"
+                }">${v.has_quoted ? "Quoted" : "Pending"}</span></td>
+                <td style="font-size:.75rem;color:var(--text-muted);">${fmtDate(
+                  v.invited_at
+                )}</td>
+              </tr>`
+                )
+                .join("")}
+            </tbody>
+          </table>
+        </div>`
+            : ""
+        }`;
+
+        // Actions in footer
+        let acts = `<button class="mbtn mbtn-ghost" onclick="closeModal('detail-modal')">Close</button>`;
+        if (isOwner && ROLE !== "manager" && ROLE !== "vendor") {
+          if (r.status === "draft") {
+            acts += `<button class="mbtn mbtn-primary" onclick="openEditModal(${r.id});closeModal('detail-modal')">✏️ Edit</button>`;
+            acts += `<button class="mbtn mbtn-success" onclick="changeStatus(${r.id},'open');closeModal('detail-modal')">📬 Publish</button>`;
+          }
+          if (r.status === "open") {
+            acts += `<button class="mbtn mbtn-primary" onclick="openInviteModal(${r.id});closeModal('detail-modal')">👥 Invite Vendors</button>`;
+            acts += `<button class="mbtn mbtn-warning" onclick="changeStatus(${r.id},'awarded');closeModal('detail-modal')">🏆 Award</button>`;
+            acts += `<button class="mbtn mbtn-danger"  onclick="changeStatus(${r.id},'closed');closeModal('detail-modal')">🔒 Close</button>`;
+          }
+        }
+        document.getElementById("detail-actions").innerHTML = acts;
+
+        // Fetch full details including vendors from backend
+        API.get(`/rfqs/${id}`)
+          .then((res) => {
+            const full = res.rfq;
+            if (full.vendors && full.vendors.length) {
+              const idx = allRFQs.findIndex((x) => x.id === id);
+              if (idx > -1) allRFQs[idx] = { ...allRFQs[idx], ...full };
+              openDetail(id); // re-render with vendor list
+            }
+          })
+          .catch(() => {}); // silently use cached data
+
+        document.getElementById("detail-modal").classList.add("show");
+      }
+
+      // ── CHANGE STATUS ─────────────────────────────────────────────
+      function changeStatus(id, newStatus) {
+        API.patch(`/rfqs/${id}/status`, { status: newStatus })
+          .then(() => {
+            const r = allRFQs.find((x) => x.id === id);
+            if (r) r.status = newStatus;
+            applyFilters();
+            updateStats();
+            showToast(
+              `RFQ marked as ${newStatus}`,
+              newStatus === "open"
+                ? "success"
+                : newStatus === "awarded"
+                ? "warning"
+                : "info"
+            );
+          })
+          .catch(() => {
+            const r = allRFQs.find((x) => x.id === id);
+            if (r) r.status = newStatus;
+            applyFilters();
+            updateStats();
+            showToast(`Status updated (demo)`, "info");
+          });
+      }
+
+      // ── CREATE / EDIT MODAL ───────────────────────────────────────
+      document
+        .getElementById("create-rfq-btn")
+        ?.addEventListener("click", () => {
+          editingId = null;
+          document.getElementById("rfq-modal-title").textContent = "New RFQ";
+          document.getElementById("rfq-submit-btn").textContent = "Create RFQ";
+          ["rfq-title", "rfq-desc", "rfq-budget", "rfq-deadline"].forEach(
+            (id) => (document.getElementById(id).value = "")
+          );
+          document.getElementById("rfq-category").value = "";
+          document.getElementById("rfq-status-select").value = "draft";
+          document.getElementById("rfq-error").style.display = "none";
+          document.getElementById("rfq-modal").classList.add("show");
+        });
+
+      function openEditModal(id) {
+        const r = allRFQs.find((x) => x.id === id);
+        if (!r) return;
+        editingId = id;
+        document.getElementById("rfq-modal-title").textContent = "Edit RFQ";
+        document.getElementById("rfq-submit-btn").textContent = "Save Changes";
+        document.getElementById("rfq-title").value = r.title || "";
+        document.getElementById("rfq-desc").value = r.description || "";
+        document.getElementById("rfq-category").value = r.category || "";
+        document.getElementById("rfq-budget").value = r.budget || "";
+        document.getElementById("rfq-status-select").value =
+          r.status || "draft";
+        if (r.deadline) {
+          // Convert ISO to datetime-local format
+          document.getElementById("rfq-deadline").value = r.deadline.slice(
+            0,
+            16
+          );
+        } else {
+          document.getElementById("rfq-deadline").value = "";
+        }
+        document.getElementById("rfq-error").style.display = "none";
+        document.getElementById("rfq-modal").classList.add("show");
+      }
+
+      function submitRFQ() {
+        const err = document.getElementById("rfq-error");
+        const payload = {
+          title: document.getElementById("rfq-title").value.trim(),
+          description: document.getElementById("rfq-desc").value.trim(),
+          category: document.getElementById("rfq-category").value,
+          budget: document.getElementById("rfq-budget").value || null,
+          deadline: document.getElementById("rfq-deadline").value || null,
+          status: document.getElementById("rfq-status-select").value,
+        };
+
+        if (!payload.title) {
+          err.textContent = "Title is required.";
+          err.style.display = "block";
+          return;
+        }
+        err.style.display = "none";
+
+        const call = editingId
+          ? API.put(`/rfqs/${editingId}`, payload)
+          : API.post("/rfqs", payload);
+
+        call
+          .then((res) => {
+            closeModal("rfq-modal");
+            showToast(
+              editingId ? "✅ RFQ updated!" : "✅ RFQ created!",
+              "success"
+            );
+            loadRFQs();
+          })
+          .catch((e) => {
+            // Demo: add locally
+            if (editingId) {
+              const idx = allRFQs.findIndex((x) => x.id === editingId);
+              if (idx > -1) allRFQs[idx] = { ...allRFQs[idx], ...payload };
+            } else {
+              const newRFQ = {
+                id: Date.now(),
+                ...payload,
+                vendor_count: 0,
+                quote_count: 0,
+                creator_name: USER?.first_name + " " + USER?.last_name,
+                created_by: USER?.id,
+                created_at: new Date().toISOString(),
+              };
+              allRFQs.unshift(newRFQ);
+            }
+            closeModal("rfq-modal");
+            populateCategories();
+            applyFilters();
+            updateStats();
+            showToast(
+              editingId ? "RFQ updated (demo)" : "RFQ created (demo)",
+              "info"
+            );
+          });
+      }
+
+      // ── INVITE VENDORS MODAL ─────────────────────────────────────
+      function openInviteModal(rfqId) {
+        inviteRfqId = rfqId;
+        document.getElementById("invite-search").value = "";
+        document.getElementById("invite-error").style.display = "none";
+
+        const rfq = allRFQs.find((x) => x.id === rfqId);
+        alreadyInvited = new Set((rfq?.vendors || []).map((v) => v.vendor_id));
+
+        renderInviteList([]);
+        document.getElementById("invite-modal").classList.add("show");
+
+        // Load vendors
+        if (allVendors.length) {
+          renderInviteList(allVendors);
+        } else {
+          API.get("/vendors")
+            .then((res) => {
+              allVendors = res.vendors || [];
+              renderInviteList(allVendors);
+            })
+            .catch(() => {
+              allVendors = getDemoVendors();
+              renderInviteList(allVendors);
+            });
+        }
+      }
+
+      function getDemoVendors() {
+        return [
+          {
+            id: 1,
+            company: "Tata Supplies Ltd",
+            email: "contact@tata.com",
+            vendor_category: "Raw Materials",
+            status: "approved",
+          },
+          {
+            id: 2,
+            company: "Reliance Infra Corp",
+            email: "info@relianceinfra.com",
+            vendor_category: "Facility Management",
+            status: "approved",
+          },
+          {
+            id: 5,
+            company: "Tech Horizon Pvt Ltd",
+            email: "hello@techhorizon.in",
+            vendor_category: "IT & Technology",
+            status: "approved",
+          },
+          {
+            id: 7,
+            company: "L&T Procurement",
+            email: "procure@lt.com",
+            vendor_category: "Manufacturing",
+            status: "approved",
+          },
+        ];
+      }
+
+      function filterInviteList() {
+        const q = document.getElementById("invite-search").value.toLowerCase();
+        const filtered = allVendors.filter(
+          (v) =>
+            (v.company || "").toLowerCase().includes(q) ||
+            (v.email || "").toLowerCase().includes(q) ||
+            (v.vendor_category || "").toLowerCase().includes(q)
+        );
+        renderInviteList(filtered);
+      }
+
+      function renderInviteList(vendors) {
+        const list = document.getElementById("vendor-invite-list");
+        if (!vendors.length) {
+          list.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:20px;">No vendors found.</div>`;
+          return;
+        }
+        list.innerHTML = vendors
+          .map((v) => {
+            const isInvited = alreadyInvited.has(v.id);
+            const color = avatarColor(v.company);
+            return `
+        <label class="vendor-invite-item" style="cursor:pointer;">
+          <input type="checkbox" value="${v.id}" ${
+              isInvited ? "checked disabled" : ""
+            } />
+          <div class="vendor-invite-avatar" style="background:${color};">${initials(
+              v.company
+            )}</div>
+          <div class="vendor-invite-info">
+            <div class="vendor-invite-name">${v.company}</div>
+            <div class="vendor-invite-sub">${v.vendor_category || "—"} · ${
+              v.email
+            }</div>
+          </div>
+          ${isInvited ? `<span class="already-invited">Invited</span>` : ""}
+        </label>`;
+          })
+          .join("");
+      }
+
+      function submitInvite() {
+        const err = document.getElementById("invite-error");
+        const checked = [
+          ...document.querySelectorAll(
+            "#vendor-invite-list input[type=checkbox]:checked:not(:disabled)"
+          ),
+        ].map((el) => parseInt(el.value));
+
+        if (!checked.length) {
+          err.textContent = "Select at least one vendor to invite.";
+          err.style.display = "block";
+          return;
+        }
+        err.style.display = "none";
+
+        API.post(`/rfqs/${inviteRfqId}/invite`, { vendor_ids: checked })
+          .then(() => {
+            closeModal("invite-modal");
+            showToast(`✅ ${checked.length} vendor(s) invited!`, "success");
+            loadRFQs();
+          })
+          .catch(() => {
+            // Demo: update locally
+            const rfq = allRFQs.find((x) => x.id === inviteRfqId);
+            if (rfq)
+              rfq.vendor_count = (rfq.vendor_count || 0) + checked.length;
+            closeModal("invite-modal");
+            applyFilters();
+            showToast(`${checked.length} vendor(s) invited (demo)`, "info");
+          });
+      }
+
+      // ── MODAL HELPERS ─────────────────────────────────────────────
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+      }
+      document.querySelectorAll(".modal-backdrop").forEach((m) => {
+        m.addEventListener("click", (e) => {
+          if (e.target === m) m.classList.remove("show");
+        });
+      });
+
+      // ── TOAST ─────────────────────────────────────────────────────
+      function showToast(msg, type = "info") {
+        const c = {
+          success: "#10b981",
+          warning: "#f59e0b",
+          info: "#4f8ef7",
+          error: "#ef4444",
+        };
+        const t = document.createElement("div");
+        t.style.cssText = `position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:10px 18px;border-radius:10px;font-size:.83rem;font-weight:600;background:${c[type]};color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:slideUp .2s ease;`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+      }
+
+      // ── EVENT LISTENERS ───────────────────────────────────────────
+      document
+        .getElementById("search-input")
+        .addEventListener("input", applyFilters);
+      document
+        .getElementById("status-filter")
+        .addEventListener("change", applyFilters);
+      document
+        .getElementById("category-filter")
+        .addEventListener("change", applyFilters);
+      document
+        .getElementById("mobile-menu-btn")
+        .addEventListener("click", () => {
+          document.getElementById("sidebar")?.classList.toggle("open");
+          document.getElementById("sidebar-overlay")?.classList.toggle("show");
+        });
+
+      // ── INIT ──────────────────────────────────────────────────────
+      loadRFQs();
+    </script>
+  </body>
+</html>
